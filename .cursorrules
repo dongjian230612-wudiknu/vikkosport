@@ -1,0 +1,46 @@
+# Vikko Sport — Cursor Rules
+# 运动眼镜 DTC 电商项目
+
+## 技术栈
+- React 19 + TypeScript + Vite
+- Tailwind CSS (utility-first)
+- wouter (轻量路由)
+- lucide-react (图标)
+
+## 代码规范
+- 所有组件用函数组件 + hooks
+- Props 必须带类型定义
+- 颜色只用 tailwind.config 里定义的 brand 色
+- 图片用 /public/images/ 或 import 方式，禁止硬编码外部 URL
+- 所有 fetch 必须带 error handling
+
+## 文件结构
+- src/components/ui/ — 通用原子组件 (Button, Badge, Input)
+- src/components/layout/ — Header, Footer, Navigation
+- src/components/product/ — ProductCard, ProductGrid, LensConfigurator
+- src/pages/ — 页面级组件
+- src/hooks/ — 自定义 hooks
+- src/types/ — TypeScript 类型
+- src/lib/ — 工具函数
+
+## 命名规范
+- 组件：PascalCase (ProductCard.tsx)
+- hooks：camelCase + use 前缀 (useCart.ts)
+- 类型：PascalCase (Product.ts)
+- 常量：UPPER_SNAKE_CASE
+
+## 品牌约束
+- 主色：vikko-black (#0a0a0a), vikko-accent (#00d4ff 电光蓝)
+- 字体：无衬线，粗体用于标题
+- 风格：运动、速度感、极简、高对比
+- 禁止：圆角过大（max rounded-lg）、渐变背景、卡通插画
+
+## API 规范
+- 所有 API 调用通过 VITE_API_BASE_URL
+- 响应统一 { success: boolean, data: T, message?: string }
+- 错误统一 toast 提示
+
+## 环境变量
+- 开发用 .env.development
+- 生产用 .env.production (gitignore)
+- 提交前检查没有硬编码密钥
