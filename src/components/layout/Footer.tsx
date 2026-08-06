@@ -1,4 +1,4 @@
-import { Glasses, Instagram, Twitter } from 'lucide-react';
+import { Glasses, Camera, MessageCircle } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -42,10 +42,10 @@ export function Footer() {
           </p>
           <div className="flex items-center gap-4">
             <a href="#" className="text-vikko-muted hover:text-vikko-accent transition-colors">
-              <Instagram className="w-5 h-5" />
+              <Camera className="w-5 h-5" />
             </a>
             <a href="#" className="text-vikko-muted hover:text-vikko-accent transition-colors">
-              <Twitter className="w-5 h-5" />
+              <MessageCircle className="w-5 h-5" />
             </a>
           </div>
         </div>

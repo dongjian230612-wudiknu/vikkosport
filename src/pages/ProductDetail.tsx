@@ -38,7 +38,7 @@ const mockProduct: Product = {
 };
 
 export function ProductDetail() {
-  const [match, params] = useRoute('/product/:slug');
+  const [match] = useRoute('/product/:slug');
   const [selectedColor, setSelectedColor] = useState(mockProduct.colors[0].id);
   const [activeImage, setActiveImage] = useState(0);
 
