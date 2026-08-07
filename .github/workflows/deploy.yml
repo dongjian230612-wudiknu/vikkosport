@@ -42,8 +42,14 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           script: |
+            set -e
             cd /home/ubuntu/vikkosport
-            npm install -g serve
+            test -d dist
             pm2 delete vikkosport 2>/dev/null || true
-            pm2 start "serve dist -s -l 3001" --name vikkosport
+            # Use PM2 built-in static server (no global npm install / sudo needed)
+            pm2 serve /home/ubuntu/vikkosport/dist 3001 --spa --name vikkosport
             pm2 save
+            sleep 2
+            pm2 describe vikkosport | grep -q "status.*online"
+            curl -sf http://127.0.0.1:3001/ >/dev/null
+            echo "vikkosport healthy on :3001"
