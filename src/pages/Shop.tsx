@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useSearch } from 'wouter';
 import { ProductCard } from '../components/product/ProductCard';
 import { Button } from '../components/ui/Button';
 import { SlidersHorizontal } from 'lucide-react';
+import { SPORTS } from '../lib/sports';
 import type { Product } from '../types/product';
 
 const mockProducts: Product[] = [
@@ -19,7 +21,7 @@ const mockProducts: Product[] = [
       { id: 'wht', name: 'Arctic White', hex: '#f5f5f5' },
     ],
     category: 'sunglasses',
-    tags: ['cycling', 'running'],
+    tags: ['road-cycling', 'gravel-cycling', 'running'],
     inStock: true,
     rxCompatible: true,
     rating: 4.8,
@@ -40,7 +42,7 @@ const mockProducts: Product[] = [
       { id: 'red', name: 'Racing Red', hex: '#c41e3a' },
     ],
     category: 'sunglasses',
-    tags: ['water sports', 'fishing'],
+    tags: ['trail-running', 'mountain-bike', 'running'],
     inStock: true,
     rxCompatible: false,
     rating: 4.6,
@@ -50,19 +52,40 @@ const mockProducts: Product[] = [
 
 const categories = ['All', 'Sunglasses', 'RX Sports', 'Accessories'];
 
+function getSportParam(search: string): string | null {
+  return new URLSearchParams(search).get('sport');
+}
+
 export function Shop() {
+  const search = useSearch();
+  const sportId = getSportParam(search);
+  const sport = SPORTS.find(s => s.id === sportId) ?? null;
   const [activeCategory, setActiveCategory] = useState('All');
 
-  const filtered = activeCategory === 'All'
-    ? mockProducts
-    : mockProducts.filter(p => p.category === activeCategory.toLowerCase().replace(' ', '-'));
+  const filtered = (() => {
+    let list = mockProducts;
+    if (sportId) {
+      list = list.filter(p => p.tags.includes(sportId));
+    }
+    if (activeCategory !== 'All') {
+      const key = activeCategory.toLowerCase().replace(' ', '-');
+      list = list.filter(p => p.category === key);
+    }
+    return list;
+  })();
 
   return (
     <div className="animate-fade-in">
       <div className="bg-vikko-dark py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-vikko-white mb-4">Shop</h1>
-          <p className="text-vikko-muted">Performance eyewear for every sport.</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-vikko-white mb-4">
+            {sport ? sport.label : 'Shop'}
+          </h1>
+          <p className="text-vikko-muted">
+            {sport
+              ? `Performance eyewear built for ${sport.label.toLowerCase()}.`
+              : 'Performance eyewear for every sport.'}
+          </p>
         </div>
       </div>
 
