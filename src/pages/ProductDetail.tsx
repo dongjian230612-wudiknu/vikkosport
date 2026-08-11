@@ -51,7 +51,7 @@ export function ProductDetail() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div className="space-y-4">
-            <div className="aspect-square bg-vikko-dark rounded-lg overflow-hidden">
+            <div className="aspect-square bg-vikko-canvas rounded-lg overflow-hidden border border-vikko-border">
               <img
                 src={mockProduct.images[activeImage]?.url}
                 alt={mockProduct.images[activeImage]?.alt}
@@ -65,7 +65,7 @@ export function ProductDetail() {
                   onClick={() => setActiveImage(idx)}
                   className={cn(
                     'w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors',
-                    activeImage === idx ? 'border-vikko-accent' : 'border-vikko-gray'
+                    activeImage === idx ? 'border-vikko-black' : 'border-vikko-border'
                   )}
                 >
                   <img src={img.url} alt={img.alt} className="w-full h-full object-cover" />
@@ -76,7 +76,7 @@ export function ProductDetail() {
 
           <div className="space-y-6">
             <div>
-              <h1 className="text-3xl font-bold text-vikko-white mb-2">{mockProduct.name}</h1>
+              <h1 className="font-display text-3xl font-bold text-vikko-black mb-2">{mockProduct.name}</h1>
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
@@ -85,8 +85,8 @@ export function ProductDetail() {
                       className={cn(
                         'w-4 h-4',
                         i < Math.floor(mockProduct.rating)
-                          ? 'text-vikko-accent fill-vikko-accent'
-                          : 'text-vikko-gray'
+                          ? 'text-vikko-black fill-vikko-black'
+                          : 'text-vikko-border'
                       )}
                     />
                   ))}
@@ -95,22 +95,22 @@ export function ProductDetail() {
               </div>
             </div>
 
-            <div className="text-3xl font-bold text-vikko-white">
+            <div className="text-3xl font-bold text-vikko-black">
               {formatPrice(mockProduct.price)}
             </div>
 
             <p className="text-vikko-muted leading-relaxed">{mockProduct.description}</p>
 
             <div>
-              <h3 className="text-vikko-white font-semibold mb-3">Color: <span className="text-vikko-muted font-normal">{color.name}</span></h3>
+              <h3 className="text-vikko-black font-semibold mb-3">Color: <span className="text-vikko-muted font-normal">{color.name}</span></h3>
               <div className="flex gap-3">
                 {mockProduct.colors.map(c => (
                   <button
                     key={c.id}
                     onClick={() => setSelectedColor(c.id)}
                     className={cn(
-                      'w-10 h-10 rounded-full border-2 transition-all',
-                      selectedColor === c.id ? 'border-vikko-accent scale-110' : 'border-vikko-gray'
+                      'w-10 h-10 rounded-full border-2 transition-all cursor-pointer',
+                      selectedColor === c.id ? 'border-vikko-black scale-110' : 'border-vikko-border'
                     )}
                     style={{ backgroundColor: c.hex }}
                     title={c.name}

@@ -12,8 +12,8 @@ export function ProductCard({ product, className }: ProductCardProps) {
   const mainImage = product.images.find(i => i.angle === 'front') || product.images[0];
 
   return (
-    <Link href={`/product/${product.slug}`} className={cn('group block', className)}>
-      <div className="relative aspect-[4/3] bg-vikko-dark rounded-lg overflow-hidden mb-3">
+    <Link href={`/product/${product.slug}`} className={cn('group block cursor-pointer', className)}>
+      <div className="relative aspect-[4/3] bg-vikko-canvas rounded-lg overflow-hidden mb-4 border border-vikko-border">
         <img
           src={mainImage?.url}
           alt={mainImage?.alt || product.name}
@@ -21,39 +21,44 @@ export function ProductCard({ product, className }: ProductCardProps) {
           loading="lazy"
         />
         {product.originalPrice && (
-          <span className="absolute top-2 left-2 bg-vikko-accent text-vikko-black text-xs font-bold px-2 py-1 rounded">
+          <span className="absolute top-2 left-2 bg-vikko-black text-vikko-white text-xs font-bold px-2 py-1 rounded">
             SALE
           </span>
         )}
+        {product.isNew && !product.originalPrice && (
+          <span className="absolute top-2 left-2 bg-vikko-white text-vikko-black text-xs font-bold px-2 py-1 rounded border border-vikko-border">
+            NEW
+          </span>
+        )}
         {product.rxCompatible && (
-          <span className="absolute top-2 right-2 bg-vikko-dark/80 text-vikko-accent text-xs font-medium px-2 py-1 rounded border border-vikko-accent/30">
+          <span className="absolute top-2 right-2 bg-vikko-white/95 text-vikko-accent text-xs font-semibold px-2 py-1 rounded border border-vikko-border">
             RX Ready
           </span>
         )}
       </div>
 
-      <h3 className="text-vikko-white font-semibold text-sm group-hover:text-vikko-accent transition-colors">
+      <h3 className="font-display text-vikko-black font-semibold text-sm group-hover:text-vikko-accent transition-colors">
         {product.name}
       </h3>
 
       <div className="flex items-center gap-1 mt-1">
-        <Star className="w-3.5 h-3.5 text-vikko-accent fill-vikko-accent" />
-        <span className="text-vikko-white text-sm font-medium">{product.rating}</span>
+        <Star className="w-3.5 h-3.5 text-vikko-black fill-vikko-black" />
+        <span className="text-vikko-ink text-sm font-medium">{product.rating}</span>
         <span className="text-vikko-muted text-xs">({product.reviewCount})</span>
       </div>
 
       <div className="flex items-center gap-2 mt-2">
-        <span className="text-vikko-white font-bold">{formatPrice(product.price)}</span>
+        <span className="text-vikko-black font-bold">{formatPrice(product.price)}</span>
         {product.originalPrice && (
           <span className="text-vikko-muted text-sm line-through">{formatPrice(product.originalPrice)}</span>
         )}
       </div>
 
-      <div className="flex items-center gap-1.5 mt-2">
+      <div className="flex items-center gap-1.5 mt-3">
         {product.colors.map(color => (
           <span
             key={color.id}
-            className="w-4 h-4 rounded border border-vikko-gray"
+            className="w-4 h-4 rounded-full border border-vikko-border"
             style={{ backgroundColor: color.hex }}
             title={color.name}
           />

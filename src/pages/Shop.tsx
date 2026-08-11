@@ -173,21 +173,21 @@ export function Shop() {
   })();
 
   return (
-    <div className="animate-fade-in">
-      <div className="bg-vikko-dark py-12">
+    <div className="animate-fade-in bg-vikko-white min-h-full">
+      <div className="bg-vikko-canvas border-b border-vikko-border py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-vikko-white mb-4">{title}</h1>
+          <h1 className="font-display text-3xl md:text-4xl font-bold text-vikko-black mb-3">{title}</h1>
           <p className="text-vikko-muted">{subtitle}</p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="flex flex-wrap items-center gap-3 mb-8">
           <SlidersHorizontal className="w-5 h-5 text-vikko-muted" />
           {filterChips.map(cat => (
             <Button
               key={cat}
-              variant={activeChip === cat ? 'primary' : 'ghost'}
+              variant={activeChip === cat ? 'primary' : 'outline'}
               size="sm"
               onClick={() => setActiveChip(cat)}
             >
@@ -196,7 +196,7 @@ export function Shop() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {filtered.map(product => (
             <ProductCard key={product.id} product={product} />
           ))}

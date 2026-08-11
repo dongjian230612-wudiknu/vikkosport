@@ -8,17 +8,25 @@ export default {
     extend: {
       colors: {
         vikko: {
-          black: '#0a0a0a',
-          dark: '#1a1a1a',
-          gray: '#2a2a2a',
-          accent: '#00d4ff',
-          'accent-dark': '#00a8cc',
-          white: '#f5f5f5',
-          muted: '#888888',
+          // Light retail surfaces (Oakley / SportRx / Rudy / 100% pattern)
+          black: '#111111',
+          ink: '#1a1a1a',
+          white: '#ffffff',
+          canvas: '#f5f5f5',
+          surface: '#ffffff',
+          border: '#e6e6e6',
+          muted: '#6b6b6b',
+          // Sport accent — used sparingly on light UI
+          accent: '#0284c7',
+          'accent-dark': '#0369a1',
+          // Legacy aliases remapped for light theme
+          dark: '#111111',
+          gray: '#e6e6e6',
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['"Nunito Sans"', 'system-ui', 'sans-serif'],
+        display: ['Rubik', 'system-ui', 'sans-serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out',

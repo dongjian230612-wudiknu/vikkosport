@@ -9,8 +9,8 @@ interface MegaMenuColumnsProps {
 
 export function MegaMenuColumns({ columns, onNavigate }: MegaMenuColumnsProps) {
   return (
-    <div className="border-t border-vikko-gray bg-vikko-black shadow-2xl animate-fade-in">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="border-t border-vikko-border bg-vikko-white shadow-lg animate-fade-in">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div
           className={cn(
             'grid gap-10',
@@ -19,7 +19,7 @@ export function MegaMenuColumns({ columns, onNavigate }: MegaMenuColumnsProps) {
         >
           {columns.map(column => (
             <div key={column.title}>
-              <h3 className="text-sm font-bold tracking-widest uppercase text-vikko-white mb-5">
+              <h3 className="text-xs font-bold tracking-widest uppercase text-vikko-black mb-5">
                 {column.title}
               </h3>
               <ul className="space-y-3">
@@ -28,7 +28,7 @@ export function MegaMenuColumns({ columns, onNavigate }: MegaMenuColumnsProps) {
                     <Link
                       href={item.href}
                       onClick={onNavigate}
-                      className="text-base text-vikko-muted hover:text-vikko-accent transition-colors"
+                      className="text-sm text-vikko-muted hover:text-vikko-black transition-colors cursor-pointer"
                     >
                       {item.label}
                     </Link>

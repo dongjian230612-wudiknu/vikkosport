@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-vikko-canvas text-vikko-ink font-sans;
+  }
+
+  ::selection {
+    @apply bg-vikko-black text-vikko-white;
+  }
+}

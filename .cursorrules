@@ -30,10 +30,11 @@
 - 常量：UPPER_SNAKE_CASE
 
 ## 品牌约束
-- 主色：vikko-black (#0a0a0a), vikko-accent (#00d4ff 电光蓝)
-- 字体：无衬线，粗体用于标题
-- 风格：运动、速度感、极简、高对比
-- 禁止：圆角过大（max rounded-lg）、渐变背景、卡通插画
+- 主色：vikko-black (#111111), vikko-canvas (#f5f5f5), vikko-accent (#0284c7)
+- 页面默认浅色零售风格（白底 + 黑字），对齐全品类习惯（Oakley / SportRx / Rudy / 100%）
+- 字体：Rubik（标题）+ Nunito Sans（正文）
+- 风格：运动、速度感、极简、高对比；Hero 用实景/产品图，避免整页纯黑
+- 禁止：圆角过大（max rounded-lg）、卡通插画、整页 OLED 黑底
 
 ## API 规范
 - 所有 API 调用通过 VITE_API_BASE_URL

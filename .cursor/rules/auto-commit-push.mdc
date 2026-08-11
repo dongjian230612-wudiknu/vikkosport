@@ -1,0 +1,23 @@
+---
+description: After finishing an implementation task, auto commit and push
+alwaysApply: true
+---
+
+# Auto commit + push after tasks
+
+When a discrete coding task is finished and there are relevant local changes:
+
+1. **Do not wait** for the user to type `commit + push` (or paste it again).
+2. Automatically run the normal git safety flow: status → diff → log → stage → commit (HEREDOC message) → push to the tracked remote branch.
+3. Reply briefly with the commit hash and push result.
+
+## When to skip auto commit/push
+
+- The change is only exploratory / WIP the user said not to ship
+- Files may contain secrets (`.env`, keys, credentials)
+- The user explicitly said not to commit or not to push
+- There is nothing to commit
+
+## Interaction preference
+
+Prefer finishing with the ship step already done. Do not ask “要不要 commit？” as a blocking question unless one of the skip cases applies.
