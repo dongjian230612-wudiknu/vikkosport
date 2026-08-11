@@ -3,6 +3,7 @@ import { Button } from '../components/ui/Button';
 import { ArrowRight, Shield, Truck, RotateCcw } from 'lucide-react';
 import { ProductCard } from '../components/product/ProductCard';
 import type { Product } from '../types/product';
+import heroSports from '../assets/hero-sports.jpg';
 
 const featuredProducts: Product[] = [
   {
@@ -91,7 +92,7 @@ export function Home() {
       <section className="relative min-h-[72vh] md:min-h-[78vh] flex items-end overflow-hidden bg-vikko-canvas">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/images/hero-sports.jpg')" }}
+          style={{ backgroundImage: `url(${heroSports})` }}
         />
         <div className="absolute inset-0 bg-vikko-black/45" />
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-24 pt-32">

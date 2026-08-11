@@ -52,4 +52,7 @@ jobs:
             sleep 2
             pm2 describe vikkosport | grep -q "status.*online"
             curl -sf http://127.0.0.1:3001/ >/dev/null
+            # Fail deploy if hero asset missing (avoids SPA HTML being cached as the image)
+            test -f /home/ubuntu/vikkosport/dist/images/hero-sports.jpg
+            curl -sfI http://127.0.0.1:3001/images/hero-sports.jpg | grep -qi 'content-type: image/'
             echo "vikkosport healthy on :3001"
