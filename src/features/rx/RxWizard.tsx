@@ -6,7 +6,8 @@ import { Step3Prescription } from './Step3Prescription';
 import { Step4Summary } from './Step4Summary';
 
 export function RxWizard() {
-  const { state } = useRxWizard();
+  const { state, dispatch } = useRxWizard();
+  const lockedFrame = state.frameLocked && state.selectedFrame;
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
@@ -18,9 +19,27 @@ export function RxWizard() {
           Configure prescription lenses
         </h1>
         <p className="text-vikko-muted max-w-2xl">
-          Choose your scene, pick an RX-ready frame, enter your prescription, then review the build.
+          {lockedFrame
+            ? `Continuing with ${lockedFrame.name} — enter your prescription next. No need to pick the frame again.`
+            : 'Choose your scene, pick an RX-ready frame, enter your prescription, then review the build.'}
         </p>
       </div>
+
+      {lockedFrame && (
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-vikko-border bg-vikko-canvas px-4 py-3">
+          <p className="text-sm text-vikko-black">
+            <span className="font-semibold">Selected frame:</span> {lockedFrame.name}
+            {state.scene ? ` · ${state.scene.replace(/-/g, ' ')}` : ''}
+          </p>
+          <button
+            type="button"
+            className="text-sm font-semibold text-vikko-accent hover:underline cursor-pointer"
+            onClick={() => dispatch({ type: 'SET_STEP', step: 2 })}
+          >
+            Change frame
+          </button>
+        </div>
+      )}
 
       <RxProgress current={state.step} />
 

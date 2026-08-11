@@ -52,8 +52,8 @@ export function Step3Prescription() {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
         <h2 className="font-display text-2xl font-bold text-vikko-black">Prescription & lenses</h2>
-        <Button variant="ghost" size="sm" onClick={() => dispatch({ type: 'SET_STEP', step: 2 })}>
-          Change frame
+        <Button variant="ghost" size="sm" onClick={() => dispatch({ type: 'SET_STEP', step: state.frameLocked ? 1 : 2 })}>
+          {state.frameLocked ? 'Adjust scene' : 'Change frame'}
         </Button>
       </div>
       <p className="text-vikko-muted mb-8">

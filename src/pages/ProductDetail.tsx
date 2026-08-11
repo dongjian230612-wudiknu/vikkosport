@@ -146,7 +146,10 @@ export function ProductDetail() {
                 Add to Cart
               </Button>
               {product.rxCompatible && (
-                <Link href="/rx-sports" className="flex-1">
+                <Link
+                  href={`/rx-sports?frame=${product.slug}&color=${colorId}`}
+                  className="flex-1"
+                >
                   <Button variant="outline" size="lg" className="w-full gap-2">
                     <Shield className="w-5 h-5" />
                     Add RX Lenses

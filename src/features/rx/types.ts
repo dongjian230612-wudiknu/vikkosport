@@ -41,6 +41,8 @@ export interface RxWizardState {
   scene: RxSceneId | null;
   selectedFrame: Product | null;
   selectedColorId: string | null;
+  /** True when frame came from PDP — skip re-picking in Step 2. */
+  frameLocked: boolean;
   prescription: RxPrescriptionDraft | null;
   lensConfig: RxLensConfig | null;
   addedToCart: boolean;
@@ -50,6 +52,7 @@ export type RxWizardAction =
   | { type: 'SET_STEP'; step: RxStep }
   | { type: 'SET_SCENE'; scene: RxSceneId }
   | { type: 'SET_FRAME'; frame: Product; colorId: string }
+  | { type: 'PRESELECT_FRAME'; frame: Product; colorId: string; scene?: RxSceneId | null }
   | { type: 'SET_PRESCRIPTION'; prescription: RxPrescriptionDraft }
   | { type: 'SET_LENS_CONFIG'; lensConfig: RxLensConfig }
   | { type: 'MARK_ADDED' }
@@ -111,6 +114,7 @@ export const initialRxState: RxWizardState = {
   scene: null,
   selectedFrame: null,
   selectedColorId: null,
+  frameLocked: false,
   prescription: null,
   lensConfig: null,
   addedToCart: false,
