@@ -1,3 +1,6 @@
+export type ProductCategory = 'sunglasses' | 'eyeglasses' | 'accessories';
+export type RxType = 'direct' | 'insert' | 'clip-on';
+
 export interface Product {
   id: string;
   sku: string;
@@ -9,15 +12,33 @@ export interface Product {
   features: string[];
   images: ProductImage[];
   colors: ProductColor[];
-  category: 'sunglasses' | 'eyeglasses' | 'accessories';
+  category: ProductCategory;
   gender?: 'men' | 'women' | 'unisex';
   fit?: 'small' | 'medium' | 'large';
   isNew?: boolean;
+  /** Sport / activity tags used by shop filters (e.g. cycling, running). */
   tags: string[];
   inStock: boolean;
   rxCompatible: boolean;
+  /** How prescription is supported when rxCompatible is true. */
+  rxType?: RxType | null;
+  specs?: ProductSpecs;
+  lensOptions?: LensOptions;
   rating: number;
   reviewCount: number;
+}
+
+export interface ProductSpecs {
+  lensMaterial: string;
+  frameMaterial: string;
+  weight: string;
+  uvProtection: string;
+}
+
+export interface LensOptions {
+  colors: string[];
+  photochromic: boolean;
+  polarized: boolean;
 }
 
 export interface ProductImage {

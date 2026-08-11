@@ -2,74 +2,10 @@ import { Link } from 'wouter';
 import { Button } from '../components/ui/Button';
 import { ArrowRight, Shield, Truck, RotateCcw } from 'lucide-react';
 import { ProductCard } from '../components/product/ProductCard';
-import type { Product } from '../types/product';
+import { getFeaturedProducts } from '../data/products';
 import heroSports from '../assets/hero-sports.jpg';
 
-const featuredProducts: Product[] = [
-  {
-    id: '1',
-    sku: 'VS-001-BLK',
-    name: 'Vikko Velocity',
-    slug: 'vikko-velocity-black',
-    price: 149,
-    description: 'Ultra-lightweight cycling sunglasses.',
-    features: [],
-    images: [{ url: '/images/vs-001-front.jpg', alt: 'Velocity', angle: 'front' }],
-    colors: [
-      { id: 'blk', name: 'Matte Black', hex: '#1a1a1a' },
-      { id: 'wht', name: 'Arctic White', hex: '#f5f5f5' },
-    ],
-    category: 'sunglasses',
-    tags: ['cycling'],
-    inStock: true,
-    rxCompatible: true,
-    rating: 4.8,
-    reviewCount: 124,
-    isNew: true,
-  },
-  {
-    id: '2',
-    sku: 'VS-002-BLU',
-    name: 'Vikko Storm',
-    slug: 'vikko-storm-blue',
-    price: 179,
-    originalPrice: 199,
-    description: 'Polarized sports sunglasses.',
-    features: [],
-    images: [{ url: '/images/vs-002-front.jpg', alt: 'Storm', angle: 'front' }],
-    colors: [
-      { id: 'blu', name: 'Deep Blue', hex: '#1e3a5f' },
-      { id: 'red', name: 'Racing Red', hex: '#c41e3a' },
-    ],
-    category: 'sunglasses',
-    tags: ['running'],
-    inStock: true,
-    rxCompatible: false,
-    rating: 4.6,
-    reviewCount: 89,
-  },
-  {
-    id: '3',
-    sku: 'VS-003-CLR',
-    name: 'Vikko Apex',
-    slug: 'vikko-apex-clear',
-    price: 159,
-    description: 'Prescription sport eyeglasses.',
-    features: [],
-    images: [{ url: '/images/vs-003-front.jpg', alt: 'Apex', angle: 'front' }],
-    colors: [
-      { id: 'clr', name: 'Crystal', hex: '#e8e8e8' },
-      { id: 'blk', name: 'Matte Black', hex: '#1a1a1a' },
-    ],
-    category: 'eyeglasses',
-    tags: ['cycling'],
-    inStock: true,
-    rxCompatible: true,
-    rating: 4.7,
-    reviewCount: 56,
-    isNew: true,
-  },
-];
+const featuredProducts = getFeaturedProducts(3);
 
 const categories = [
   { label: "Men's Sunglasses", href: '/shop?type=sunglasses&gender=men', image: '/images/categories/mens-sunglasses.jpg' },

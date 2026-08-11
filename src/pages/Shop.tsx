@@ -4,80 +4,8 @@ import { ProductCard } from '../components/product/ProductCard';
 import { Button } from '../components/ui/Button';
 import { SlidersHorizontal } from 'lucide-react';
 import { SPORTS } from '../lib/sports';
+import { products } from '../data/products';
 import type { Product } from '../types/product';
-
-const mockProducts: Product[] = [
-  {
-    id: '1',
-    sku: 'VS-001-BLK',
-    name: 'Vikko Velocity Black',
-    slug: 'vikko-velocity-black',
-    price: 149,
-    description: 'Ultra-lightweight cycling sunglasses with interchangeable lenses.',
-    features: ['Interchangeable lenses', 'TR90 frame', 'Rubber grip temples'],
-    images: [{ url: '/images/vs-001-front.jpg', alt: 'Velocity Black Front', angle: 'front' }],
-    colors: [
-      { id: 'blk', name: 'Matte Black', hex: '#1a1a1a' },
-      { id: 'wht', name: 'Arctic White', hex: '#f5f5f5' },
-    ],
-    category: 'sunglasses',
-    gender: 'men',
-    fit: 'medium',
-    isNew: true,
-    tags: ['road-cycling', 'gravel-cycling', 'cycling', 'running'],
-    inStock: true,
-    rxCompatible: true,
-    rating: 4.8,
-    reviewCount: 124,
-  },
-  {
-    id: '2',
-    sku: 'VS-002-BLU',
-    name: 'Vikko Storm Blue',
-    slug: 'vikko-storm-blue',
-    price: 179,
-    originalPrice: 199,
-    description: 'Polarized sports sunglasses with hydrophobic coating.',
-    features: ['Polarized lenses', 'Hydrophobic coating', 'Floatable frame'],
-    images: [{ url: '/images/vs-002-front.jpg', alt: 'Storm Blue Front', angle: 'front' }],
-    colors: [
-      { id: 'blu', name: 'Deep Blue', hex: '#1e3a5f' },
-      { id: 'red', name: 'Racing Red', hex: '#c41e3a' },
-    ],
-    category: 'sunglasses',
-    gender: 'women',
-    fit: 'small',
-    isNew: false,
-    tags: ['trail-running', 'mountain-bike', 'running', 'cycling'],
-    inStock: true,
-    rxCompatible: false,
-    rating: 4.6,
-    reviewCount: 89,
-  },
-  {
-    id: '3',
-    sku: 'VS-003-CLR',
-    name: 'Vikko Apex Clear',
-    slug: 'vikko-apex-clear',
-    price: 159,
-    description: 'Prescription-ready sport eyeglasses for training and daily wear.',
-    features: ['Rx-ready', 'TR90 frame', 'Anti-slip nose pads'],
-    images: [{ url: '/images/vs-003-front.jpg', alt: 'Apex Clear Front', angle: 'front' }],
-    colors: [
-      { id: 'clr', name: 'Crystal', hex: '#e8e8e8' },
-      { id: 'blk', name: 'Matte Black', hex: '#1a1a1a' },
-    ],
-    category: 'eyeglasses',
-    gender: 'men',
-    fit: 'large',
-    isNew: true,
-    tags: ['cycling', 'running'],
-    inStock: true,
-    rxCompatible: true,
-    rating: 4.7,
-    reviewCount: 56,
-  },
-];
 
 const filterChips = ['All', 'Sunglasses', 'Eyeglasses', 'Accessories'];
 
@@ -138,7 +66,7 @@ export function Shop() {
   const isNew = params.get('new');
 
   const filtered = (() => {
-    let list = mockProducts;
+    let list = products;
 
     if (type === 'sunglasses' || type === 'eyeglasses' || type === 'accessories') {
       list = list.filter(p => p.category === type);

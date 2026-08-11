@@ -1,50 +1,37 @@
-import { useRoute } from 'wouter';
-import { useState } from 'react';
+import { useRoute, Link } from 'wouter';
+import { useEffect, useState } from 'react';
 import { Star, ShoppingCart, Shield, Check } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { cn, formatPrice } from '../lib/utils';
-import type { Product } from '../types/product';
-
-const mockProduct: Product = {
-  id: '1',
-  sku: 'VS-001-BLK',
-  name: 'Vikko Velocity Black',
-  slug: 'vikko-velocity-black',
-  price: 149,
-  description: 'Ultra-lightweight cycling sunglasses with interchangeable lenses. The Velocity frame weighs just 24g and features adjustable nose pads for a secure fit during high-intensity rides.',
-  features: [
-    'Interchangeable PC lenses (clear, smoke, revo red)',
-    'TR90 ultra-lightweight frame (24g)',
-    'Adjustable rubber nose pads',
-    'Anti-slip temple tips',
-    'UV400 protection',
-  ],
-  images: [
-    { url: '/images/vs-001-front.jpg', alt: 'Front view', angle: 'front' },
-    { url: '/images/vs-001-45.jpg', alt: '45 degree view', angle: '45' },
-    { url: '/images/vs-001-side.jpg', alt: 'Side view', angle: 'side' },
-  ],
-  colors: [
-    { id: 'blk', name: 'Matte Black', hex: '#1a1a1a' },
-    { id: 'wht', name: 'Arctic White', hex: '#f5f5f5' },
-    { id: 'blu', name: 'Deep Blue', hex: '#1e3a5f' },
-  ],
-  category: 'sunglasses',
-  tags: ['cycling', 'running'],
-  inStock: true,
-  rxCompatible: true,
-  rating: 4.8,
-  reviewCount: 124,
-};
+import { getProductBySlug } from '../data/products';
 
 export function ProductDetail() {
-  const [match] = useRoute('/product/:slug');
-  const [selectedColor, setSelectedColor] = useState(mockProduct.colors[0].id);
+  const [match, params] = useRoute('/product/:slug');
+  const product = match && params?.slug ? getProductBySlug(params.slug) : undefined;
+  const [selectedColor, setSelectedColor] = useState('');
   const [activeImage, setActiveImage] = useState(0);
+
+  useEffect(() => {
+    if (!product) return;
+    setSelectedColor(product.colors[0]?.id ?? '');
+    setActiveImage(0);
+  }, [product]);
 
   if (!match) return null;
 
-  const color = mockProduct.colors.find(c => c.id === selectedColor) || mockProduct.colors[0];
+  if (!product) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-20 text-center">
+        <h1 className="font-display text-3xl font-bold text-vikko-black mb-4">Product not found</h1>
+        <Link href="/shop" className="text-vikko-accent font-semibold hover:underline cursor-pointer">
+          Back to shop
+        </Link>
+      </div>
+    );
+  }
+
+  const colorId = selectedColor || product.colors[0]?.id;
+  const color = product.colors.find(c => c.id === colorId) || product.colors[0];
 
   return (
     <div className="animate-fade-in">
@@ -53,18 +40,19 @@ export function ProductDetail() {
           <div className="space-y-4">
             <div className="aspect-square bg-vikko-canvas rounded-lg overflow-hidden border border-vikko-border">
               <img
-                src={mockProduct.images[activeImage]?.url}
-                alt={mockProduct.images[activeImage]?.alt}
+                src={product.images[activeImage]?.url}
+                alt={product.images[activeImage]?.alt}
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="flex gap-3">
-              {mockProduct.images.map((img, idx) => (
+              {product.images.map((img, idx) => (
                 <button
-                  key={idx}
+                  key={img.url}
+                  type="button"
                   onClick={() => setActiveImage(idx)}
                   className={cn(
-                    'w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors',
+                    'w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors cursor-pointer',
                     activeImage === idx ? 'border-vikko-black' : 'border-vikko-border'
                   )}
                 >
@@ -76,7 +64,7 @@ export function ProductDetail() {
 
           <div className="space-y-6">
             <div>
-              <h1 className="font-display text-3xl font-bold text-vikko-black mb-2">{mockProduct.name}</h1>
+              <h1 className="font-display text-3xl font-bold text-vikko-black mb-2">{product.name}</h1>
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
@@ -84,33 +72,57 @@ export function ProductDetail() {
                       key={i}
                       className={cn(
                         'w-4 h-4',
-                        i < Math.floor(mockProduct.rating)
+                        i < Math.floor(product.rating)
                           ? 'text-vikko-black fill-vikko-black'
                           : 'text-vikko-border'
                       )}
                     />
                   ))}
                 </div>
-                <span className="text-vikko-muted text-sm">{mockProduct.rating} ({mockProduct.reviewCount} reviews)</span>
+                <span className="text-vikko-muted text-sm">
+                  {product.rating} ({product.reviewCount} reviews)
+                </span>
               </div>
             </div>
 
-            <div className="text-3xl font-bold text-vikko-black">
-              {formatPrice(mockProduct.price)}
-            </div>
+            <div className="text-3xl font-bold text-vikko-black">{formatPrice(product.price)}</div>
 
-            <p className="text-vikko-muted leading-relaxed">{mockProduct.description}</p>
+            <p className="text-vikko-muted leading-relaxed">{product.description}</p>
+
+            {product.specs && (
+              <dl className="grid grid-cols-2 gap-3 text-sm border border-vikko-border rounded-lg p-4 bg-vikko-canvas">
+                <div>
+                  <dt className="text-vikko-muted">Lens</dt>
+                  <dd className="font-medium text-vikko-black">{product.specs.lensMaterial}</dd>
+                </div>
+                <div>
+                  <dt className="text-vikko-muted">Frame</dt>
+                  <dd className="font-medium text-vikko-black">{product.specs.frameMaterial}</dd>
+                </div>
+                <div>
+                  <dt className="text-vikko-muted">Weight</dt>
+                  <dd className="font-medium text-vikko-black">{product.specs.weight}</dd>
+                </div>
+                <div>
+                  <dt className="text-vikko-muted">UV</dt>
+                  <dd className="font-medium text-vikko-black">{product.specs.uvProtection}</dd>
+                </div>
+              </dl>
+            )}
 
             <div>
-              <h3 className="text-vikko-black font-semibold mb-3">Color: <span className="text-vikko-muted font-normal">{color.name}</span></h3>
+              <h3 className="text-vikko-black font-semibold mb-3">
+                Color: <span className="text-vikko-muted font-normal">{color?.name}</span>
+              </h3>
               <div className="flex gap-3">
-                {mockProduct.colors.map(c => (
+                {product.colors.map(c => (
                   <button
                     key={c.id}
+                    type="button"
                     onClick={() => setSelectedColor(c.id)}
                     className={cn(
                       'w-10 h-10 rounded-full border-2 transition-all cursor-pointer',
-                      selectedColor === c.id ? 'border-vikko-black scale-110' : 'border-vikko-border'
+                      colorId === c.id ? 'border-vikko-black scale-110' : 'border-vikko-border'
                     )}
                     style={{ backgroundColor: c.hex }}
                     title={c.name}
@@ -120,8 +132,8 @@ export function ProductDetail() {
             </div>
 
             <div className="space-y-2">
-              {mockProduct.features.map((feature, i) => (
-                <div key={i} className="flex items-center gap-2 text-sm text-vikko-muted">
+              {product.features.map(feature => (
+                <div key={feature} className="flex items-center gap-2 text-sm text-vikko-muted">
                   <Check className="w-4 h-4 text-vikko-accent flex-shrink-0" />
                   {feature}
                 </div>
@@ -133,18 +145,22 @@ export function ProductDetail() {
                 <ShoppingCart className="w-5 h-5" />
                 Add to Cart
               </Button>
-              {mockProduct.rxCompatible && (
-                <Button variant="outline" size="lg" className="flex-1 gap-2">
-                  <Shield className="w-5 h-5" />
-                  Add RX Lenses
-                </Button>
+              {product.rxCompatible && (
+                <Link href="/rx-sports" className="flex-1">
+                  <Button variant="outline" size="lg" className="w-full gap-2">
+                    <Shield className="w-5 h-5" />
+                    Add RX Lenses
+                    {product.rxType ? ` (${product.rxType})` : ''}
+                  </Button>
+                </Link>
               )}
             </div>
 
-            {mockProduct.rxCompatible && (
+            {product.rxCompatible && (
               <p className="text-vikko-accent text-sm flex items-center gap-1">
                 <Check className="w-4 h-4" />
                 Prescription lenses available for this frame
+                {product.rxType ? ` — ${product.rxType}` : ''}
               </p>
             )}
           </div>
