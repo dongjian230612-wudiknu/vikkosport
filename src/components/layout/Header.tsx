@@ -1,44 +1,52 @@
-import { Link, useLocation } from 'wouter';
+import { Link, useLocation, useSearch } from 'wouter';
 import { ShoppingCart, Menu, X, Glasses, ChevronDown } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { cn } from '../../lib/utils';
 import { SPORTS } from '../../lib/sports';
+import { EYEGLASSES_NAV, flattenNav, SUNGLASSES_NAV } from '../../lib/nav';
 import { SportMegaMenu } from './SportMegaMenu';
+import { MegaMenuColumns } from './MegaMenuColumns';
 
 interface HeaderProps {
   cartCount?: number;
 }
 
+type MegaKey = 'sport' | 'sunglasses' | 'eyeglasses' | null;
+
 const navItems = [
   { label: 'Shop', href: '/shop' },
-  { label: 'RX Sports', href: '/rx-sports' },
   { label: 'About', href: '/about' },
 ];
 
 export function Header({ cartCount = 0 }: HeaderProps) {
   const [location] = useLocation();
+  const search = useSearch();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [sportOpen, setSportOpen] = useState(false);
-  const [mobileSportOpen, setMobileSportOpen] = useState(false);
-  const sportRef = useRef<HTMLDivElement>(null);
+  const [openMega, setOpenMega] = useState<MegaKey>(null);
+  const [mobileSection, setMobileSection] = useState<MegaKey>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const sportActive = location.startsWith('/shop') && location.includes('sport=');
+  const params = new URLSearchParams(search);
+  const typeParam = params.get('type');
 
-  const openSport = () => {
+  const sportActive = location.startsWith('/shop') && params.has('sport') && !typeParam;
+  const sunglassesActive = location.startsWith('/shop') && typeParam === 'sunglasses';
+  const eyeglassesActive = location.startsWith('/shop') && typeParam === 'eyeglasses';
+
+  const openMenu = (key: MegaKey) => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
-    setSportOpen(true);
+    setOpenMega(key);
   };
 
-  const scheduleCloseSport = () => {
+  const scheduleClose = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => setSportOpen(false), 150);
+    closeTimer.current = setTimeout(() => setOpenMega(null), 150);
   };
 
   useEffect(() => {
-    setSportOpen(false);
+    setOpenMega(null);
     setMobileOpen(false);
-    setMobileSportOpen(false);
+    setMobileSection(null);
   }, [location]);
 
   useEffect(() => {
@@ -46,6 +54,66 @@ export function Header({ cartCount = 0 }: HeaderProps) {
       if (closeTimer.current) clearTimeout(closeTimer.current);
     };
   }, []);
+
+  const megaTrigger = (
+    key: Exclude<MegaKey, null>,
+    label: string,
+    active: boolean,
+  ) => (
+    <div
+      className="relative"
+      onMouseEnter={() => openMenu(key)}
+      onMouseLeave={scheduleClose}
+    >
+      <button
+        type="button"
+        className={cn(
+          'flex items-center gap-1 text-sm font-medium transition-colors hover:text-vikko-accent',
+          openMega === key || active ? 'text-vikko-accent' : 'text-vikko-muted'
+        )}
+        aria-expanded={openMega === key}
+        aria-haspopup="true"
+        onClick={() => setOpenMega(v => (v === key ? null : key))}
+      >
+        {label}
+        <ChevronDown className={cn('w-3.5 h-3.5 transition-transform', openMega === key && 'rotate-180')} />
+      </button>
+      {(openMega === key || active) && (
+        <span className="absolute left-0 right-0 -bottom-[21px] h-0.5 bg-vikko-white" />
+      )}
+    </div>
+  );
+
+  const mobileAccordion = (
+    key: Exclude<MegaKey, null>,
+    label: string,
+    links: { id: string; label: string; href: string }[],
+  ) => (
+    <div>
+      <button
+        type="button"
+        className="flex w-full items-center justify-between py-2 text-sm font-medium text-vikko-muted"
+        onClick={() => setMobileSection(v => (v === key ? null : key))}
+      >
+        {label}
+        <ChevronDown className={cn('w-4 h-4 transition-transform', mobileSection === key && 'rotate-180')} />
+      </button>
+      {mobileSection === key && (
+        <div className="pl-3 pb-2 space-y-1 border-l border-vikko-gray ml-1">
+          {links.map(item => (
+            <Link
+              key={item.id}
+              href={item.href}
+              className="block py-2 text-sm text-vikko-muted hover:text-vikko-accent"
+              onClick={() => setMobileOpen(false)}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <header className="sticky top-0 z-50 relative bg-vikko-black/95 backdrop-blur-sm border-b border-vikko-gray">
@@ -59,29 +127,9 @@ export function Header({ cartCount = 0 }: HeaderProps) {
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
-            <div
-              ref={sportRef}
-              className="relative"
-              onMouseEnter={openSport}
-              onMouseLeave={scheduleCloseSport}
-            >
-              <button
-                type="button"
-                className={cn(
-                  'flex items-center gap-1 text-sm font-medium transition-colors hover:text-vikko-accent',
-                  sportOpen || sportActive ? 'text-vikko-accent' : 'text-vikko-muted'
-                )}
-                aria-expanded={sportOpen}
-                aria-haspopup="true"
-                onClick={() => setSportOpen(v => !v)}
-              >
-                Sport
-                <ChevronDown className={cn('w-3.5 h-3.5 transition-transform', sportOpen && 'rotate-180')} />
-              </button>
-              {(sportOpen || sportActive) && (
-                <span className="absolute left-0 right-0 -bottom-[21px] h-0.5 bg-vikko-white" />
-              )}
-            </div>
+            {megaTrigger('sport', 'Sport', sportActive)}
+            {megaTrigger('sunglasses', 'Sunglasses', sunglassesActive)}
+            {megaTrigger('eyeglasses', 'Eyeglasses', eyeglassesActive)}
 
             {navItems.map(item => (
               <Link
@@ -119,41 +167,28 @@ export function Header({ cartCount = 0 }: HeaderProps) {
         </div>
       </div>
 
-      {sportOpen && (
+      {openMega && (
         <div
           className="hidden md:block absolute left-0 right-0 top-full"
-          onMouseEnter={openSport}
-          onMouseLeave={scheduleCloseSport}
+          onMouseEnter={() => openMenu(openMega)}
+          onMouseLeave={scheduleClose}
         >
-          <SportMegaMenu onNavigate={() => setSportOpen(false)} />
+          {openMega === 'sport' && <SportMegaMenu onNavigate={() => setOpenMega(null)} />}
+          {openMega === 'sunglasses' && (
+            <MegaMenuColumns columns={SUNGLASSES_NAV} onNavigate={() => setOpenMega(null)} />
+          )}
+          {openMega === 'eyeglasses' && (
+            <MegaMenuColumns columns={EYEGLASSES_NAV} onNavigate={() => setOpenMega(null)} />
+          )}
         </div>
       )}
 
       {mobileOpen && (
         <div className="md:hidden bg-vikko-dark border-t border-vikko-gray">
           <nav className="px-4 py-3 space-y-1">
-            <button
-              type="button"
-              className="flex w-full items-center justify-between py-2 text-sm font-medium text-vikko-muted"
-              onClick={() => setMobileSportOpen(v => !v)}
-            >
-              Sport
-              <ChevronDown className={cn('w-4 h-4 transition-transform', mobileSportOpen && 'rotate-180')} />
-            </button>
-            {mobileSportOpen && (
-              <div className="pl-3 pb-2 space-y-1 border-l border-vikko-gray ml-1">
-                {SPORTS.map(sport => (
-                  <Link
-                    key={sport.id}
-                    href={sport.href}
-                    className="block py-2 text-sm text-vikko-muted hover:text-vikko-accent"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    {sport.label}
-                  </Link>
-                ))}
-              </div>
-            )}
+            {mobileAccordion('sport', 'Sport', SPORTS)}
+            {mobileAccordion('sunglasses', 'Sunglasses', flattenNav(SUNGLASSES_NAV))}
+            {mobileAccordion('eyeglasses', 'Eyeglasses', flattenNav(EYEGLASSES_NAV))}
 
             {navItems.map(item => (
               <Link

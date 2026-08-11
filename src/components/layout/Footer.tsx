@@ -20,9 +20,9 @@ export function Footer() {
           <div>
             <h4 className="text-vikko-white font-semibold mb-4">Shop</h4>
             <ul className="space-y-2 text-sm text-vikko-muted">
-              <li><a href="/shop" className="hover:text-vikko-accent transition-colors">All Sunglasses</a></li>
-              <li><a href="/rx-sports" className="hover:text-vikko-accent transition-colors">RX Sports</a></li>
-              <li><a href="/accessories" className="hover:text-vikko-accent transition-colors">Accessories</a></li>
+              <li><a href="/shop?type=sunglasses" className="hover:text-vikko-accent transition-colors">All Sunglasses</a></li>
+              <li><a href="/shop?type=sunglasses&rx=1" className="hover:text-vikko-accent transition-colors">Prescription Sunglasses</a></li>
+              <li><a href="/shop?type=eyeglasses" className="hover:text-vikko-accent transition-colors">Eyeglasses</a></li>
             </ul>
           </div>
 

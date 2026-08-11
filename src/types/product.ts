@@ -9,7 +9,10 @@ export interface Product {
   features: string[];
   images: ProductImage[];
   colors: ProductColor[];
-  category: 'sunglasses' | 'rx-sports' | 'accessories';
+  category: 'sunglasses' | 'eyeglasses' | 'accessories';
+  gender?: 'men' | 'women' | 'unisex';
+  fit?: 'small' | 'medium' | 'large';
+  isNew?: boolean;
   tags: string[];
   inStock: boolean;
   rxCompatible: boolean;

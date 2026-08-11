@@ -21,7 +21,10 @@ const mockProducts: Product[] = [
       { id: 'wht', name: 'Arctic White', hex: '#f5f5f5' },
     ],
     category: 'sunglasses',
-    tags: ['road-cycling', 'gravel-cycling', 'running'],
+    gender: 'men',
+    fit: 'medium',
+    isNew: true,
+    tags: ['road-cycling', 'gravel-cycling', 'cycling', 'running'],
     inStock: true,
     rxCompatible: true,
     rating: 4.8,
@@ -42,35 +45,130 @@ const mockProducts: Product[] = [
       { id: 'red', name: 'Racing Red', hex: '#c41e3a' },
     ],
     category: 'sunglasses',
-    tags: ['trail-running', 'mountain-bike', 'running'],
+    gender: 'women',
+    fit: 'small',
+    isNew: false,
+    tags: ['trail-running', 'mountain-bike', 'running', 'cycling'],
     inStock: true,
     rxCompatible: false,
     rating: 4.6,
     reviewCount: 89,
   },
+  {
+    id: '3',
+    sku: 'VS-003-CLR',
+    name: 'Vikko Apex Clear',
+    slug: 'vikko-apex-clear',
+    price: 159,
+    description: 'Prescription-ready sport eyeglasses for training and daily wear.',
+    features: ['Rx-ready', 'TR90 frame', 'Anti-slip nose pads'],
+    images: [{ url: '/images/vs-003-front.jpg', alt: 'Apex Clear Front', angle: 'front' }],
+    colors: [
+      { id: 'clr', name: 'Crystal', hex: '#e8e8e8' },
+      { id: 'blk', name: 'Matte Black', hex: '#1a1a1a' },
+    ],
+    category: 'eyeglasses',
+    gender: 'men',
+    fit: 'large',
+    isNew: true,
+    tags: ['cycling', 'running'],
+    inStock: true,
+    rxCompatible: true,
+    rating: 4.7,
+    reviewCount: 56,
+  },
 ];
 
-const categories = ['All', 'Sunglasses', 'RX Sports', 'Accessories'];
+const filterChips = ['All', 'Sunglasses', 'Eyeglasses', 'Accessories'];
 
-function getSportParam(search: string): string | null {
-  return new URLSearchParams(search).get('sport');
+function titleFromParams(params: URLSearchParams): { title: string; subtitle: string } {
+  const type = params.get('type');
+  const gender = params.get('gender');
+  const sport = params.get('sport');
+  const fit = params.get('fit');
+  const rx = params.get('rx');
+  const isNew = params.get('new');
+
+  if (type === 'sunglasses') {
+    if (rx === '1') return { title: 'Prescription Sunglasses', subtitle: 'Rx-ready performance sunglasses.' };
+    if (gender === 'men') return { title: "Men's Sunglasses", subtitle: 'Sport sunglasses sized for men.' };
+    if (gender === 'women') return { title: "Women's Sunglasses", subtitle: 'Sport sunglasses sized for women.' };
+    if (isNew === '1') return { title: 'New Sunglasses', subtitle: 'Latest arrivals in performance eyewear.' };
+    if (fit) return { title: `${fit[0].toUpperCase()}${fit.slice(1)} Fit Sunglasses`, subtitle: 'Find your ideal frame fit.' };
+    if (sport && sport !== 'all') {
+      const label = sport[0].toUpperCase() + sport.slice(1);
+      return { title: `${label} Sunglasses`, subtitle: `Sunglasses built for ${sport}.` };
+    }
+    return { title: 'All Sunglasses', subtitle: 'Performance sunglasses for every condition.' };
+  }
+
+  if (type === 'eyeglasses') {
+    if (gender === 'men') return { title: "Men's Eyeglasses", subtitle: 'Prescription sport eyeglasses for men.' };
+    if (gender === 'women') return { title: "Women's Eyeglasses", subtitle: 'Prescription sport eyeglasses for women.' };
+    if (isNew === '1') return { title: 'New Eyeglasses', subtitle: 'Latest prescription sport frames.' };
+    if (sport) {
+      const label = sport[0].toUpperCase() + sport.slice(1);
+      return { title: `${label} Eyeglasses`, subtitle: `Prescription frames built for ${sport}.` };
+    }
+    return { title: 'All Eyeglasses', subtitle: 'Prescription sport eyeglasses — Rx by default.' };
+  }
+
+  const sportItem = SPORTS.find(s => s.id === sport);
+  if (sportItem) {
+    return {
+      title: sportItem.label,
+      subtitle: `Performance eyewear built for ${sportItem.label.toLowerCase()}.`,
+    };
+  }
+
+  return { title: 'Shop', subtitle: 'Performance eyewear for every sport.' };
 }
 
 export function Shop() {
   const search = useSearch();
-  const sportId = getSportParam(search);
-  const sport = SPORTS.find(s => s.id === sportId) ?? null;
-  const [activeCategory, setActiveCategory] = useState('All');
+  const params = new URLSearchParams(search);
+  const { title, subtitle } = titleFromParams(params);
+  const [activeChip, setActiveChip] = useState('All');
+
+  const type = params.get('type');
+  const gender = params.get('gender');
+  const sport = params.get('sport');
+  const fit = params.get('fit');
+  const rx = params.get('rx');
+  const isNew = params.get('new');
 
   const filtered = (() => {
     let list = mockProducts;
-    if (sportId) {
-      list = list.filter(p => p.tags.includes(sportId));
+
+    if (type === 'sunglasses' || type === 'eyeglasses' || type === 'accessories') {
+      list = list.filter(p => p.category === type);
     }
-    if (activeCategory !== 'All') {
-      const key = activeCategory.toLowerCase().replace(' ', '-');
+
+    if (gender === 'men' || gender === 'women') {
+      list = list.filter(p => p.gender === gender || p.gender === 'unisex');
+    }
+
+    if (fit === 'small' || fit === 'medium' || fit === 'large') {
+      list = list.filter(p => p.fit === fit);
+    }
+
+    if (rx === '1') {
+      list = list.filter(p => p.rxCompatible);
+    }
+
+    if (isNew === '1') {
+      list = list.filter(p => p.isNew);
+    }
+
+    if (sport && sport !== 'all') {
+      list = list.filter(p => p.tags.includes(sport));
+    }
+
+    if (activeChip !== 'All') {
+      const key = activeChip.toLowerCase() as Product['category'];
       list = list.filter(p => p.category === key);
     }
+
     return list;
   })();
 
@@ -78,26 +176,20 @@ export function Shop() {
     <div className="animate-fade-in">
       <div className="bg-vikko-dark py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-vikko-white mb-4">
-            {sport ? sport.label : 'Shop'}
-          </h1>
-          <p className="text-vikko-muted">
-            {sport
-              ? `Performance eyewear built for ${sport.label.toLowerCase()}.`
-              : 'Performance eyewear for every sport.'}
-          </p>
+          <h1 className="text-3xl md:text-4xl font-bold text-vikko-white mb-4">{title}</h1>
+          <p className="text-vikko-muted">{subtitle}</p>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-wrap items-center gap-3 mb-8">
           <SlidersHorizontal className="w-5 h-5 text-vikko-muted" />
-          {categories.map(cat => (
+          {filterChips.map(cat => (
             <Button
               key={cat}
-              variant={activeCategory === cat ? 'primary' : 'ghost'}
+              variant={activeChip === cat ? 'primary' : 'ghost'}
               size="sm"
-              onClick={() => setActiveCategory(cat)}
+              onClick={() => setActiveChip(cat)}
             >
               {cat}
             </Button>
