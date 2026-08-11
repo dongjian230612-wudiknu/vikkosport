@@ -1,6 +1,6 @@
 import { useRoute, Link } from 'wouter';
 import { useEffect, useState } from 'react';
-import { Star, ShoppingCart, Shield, Check } from 'lucide-react';
+import { Star, ShoppingCart, Check } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { cn, formatPrice } from '../lib/utils';
 import { getProductBySlug } from '../data/products';
@@ -140,28 +140,30 @@ export function ProductDetail() {
               ))}
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button size="lg" className="flex-1 gap-2">
-                <ShoppingCart className="w-5 h-5" />
-                Add to Cart
-              </Button>
-              {product.rxCompatible && (
-                <Link
-                  href={`/rx-sports?frame=${product.slug}&color=${colorId}`}
-                  className="flex-1"
-                >
-                  <Button variant="outline" size="lg" className="w-full gap-2">
-                    <Shield className="w-5 h-5" />
-                    Add RX Lenses
-                    {product.rxType ? ` (${product.rxType})` : ''}
+            <div className="flex flex-col gap-3 pt-4">
+              {product.rxCompatible ? (
+                <Link href={`/rx-sports?frame=${product.slug}&color=${colorId}`}>
+                  <Button size="lg" className="w-full uppercase tracking-wide">
+                    Select Lenses and Purchase
                   </Button>
                 </Link>
+              ) : (
+                <Button size="lg" className="w-full gap-2">
+                  <ShoppingCart className="w-5 h-5" />
+                  Add to Cart
+                </Button>
+              )}
+              {product.rxCompatible && (
+                <Button size="lg" variant="outline" className="w-full gap-2">
+                  <ShoppingCart className="w-5 h-5" />
+                  Add Frame Only
+                </Button>
               )}
             </div>
 
             {product.rxCompatible && (
-              <p className="text-vikko-accent text-sm flex items-center gap-1">
-                <Check className="w-4 h-4" />
+              <p className="text-vikko-muted text-sm flex items-center gap-1">
+                <Check className="w-4 h-4 text-vikko-accent" />
                 Prescription lenses available for this frame
                 {product.rxType ? ` — ${product.rxType}` : ''}
               </p>

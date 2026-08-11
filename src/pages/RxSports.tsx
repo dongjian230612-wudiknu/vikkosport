@@ -3,16 +3,7 @@ import { useSearch } from 'wouter';
 import { getProductBySlug } from '../data/products';
 import { RxWizard } from '../features/rx/RxWizard';
 import { RxWizardProvider, useRxWizard } from '../features/rx/store';
-import { RX_SCENES, type RxSceneId } from '../features/rx/types';
 
-function inferSceneFromTags(tags: string[]): RxSceneId | null {
-  for (const scene of RX_SCENES) {
-    if (scene.tags.some(tag => tags.includes(tag))) return scene.id;
-  }
-  return null;
-}
-
-/** Reads ?frame=&color= from PDP and locks that frame into the wizard. */
 function RxFrameBootstrap() {
   const search = useSearch();
   const { state, dispatch } = useRxWizard();
@@ -31,7 +22,6 @@ function RxFrameBootstrap() {
       type: 'PRESELECT_FRAME',
       frame: product,
       colorId,
-      scene: inferSceneFromTags(product.tags),
     });
   }, [search, dispatch, state.selectedFrame?.slug, state.frameLocked]);
 

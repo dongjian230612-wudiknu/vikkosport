@@ -1,21 +1,14 @@
 import { cn } from '../../lib/utils';
-import type { RxStep } from './types';
-
-const STEPS: { step: RxStep; label: string }[] = [
-  { step: 1, label: 'Scene' },
-  { step: 2, label: 'Frame' },
-  { step: 3, label: 'Prescription' },
-  { step: 4, label: 'Summary' },
-];
+import { LENS_STEPS, type LensStep } from './types';
 
 interface RxProgressProps {
-  current: RxStep;
+  current: LensStep;
 }
 
 export function RxProgress({ current }: RxProgressProps) {
   return (
-    <ol className="grid grid-cols-4 gap-2 mb-10">
-      {STEPS.map(({ step, label }) => {
+    <ol className="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-10">
+      {LENS_STEPS.map(({ step, label }) => {
         const active = step === current;
         const done = step < current;
         return (
@@ -32,7 +25,7 @@ export function RxProgress({ current }: RxProgressProps) {
             </div>
             <p
               className={cn(
-                'text-xs font-semibold uppercase tracking-wide',
+                'text-[10px] sm:text-xs font-semibold uppercase tracking-wide',
                 active || done ? 'text-vikko-black' : 'text-vikko-muted'
               )}
             >
