@@ -4,9 +4,10 @@ import { Footer } from './components/layout/Footer';
 import { Home } from './pages/Home';
 import { Shop } from './pages/Shop';
 import { ProductDetail } from './pages/ProductDetail';
-import { useCart } from './hooks/useCart';
+import { RxSports } from './pages/RxSports';
+import { CartProvider, useCart } from './hooks/useCart';
 
-function App() {
+function AppShell() {
   const { totalItems } = useCart();
 
   return (
@@ -17,12 +18,7 @@ function App() {
           <Route path="/" component={Home} />
           <Route path="/shop" component={Shop} />
           <Route path="/product/:slug" component={ProductDetail} />
-          <Route path="/rx-sports">
-            <div className="max-w-7xl mx-auto px-4 py-20 text-center">
-              <h1 className="font-display text-3xl font-bold mb-4 text-vikko-black">RX Sports Configurator</h1>
-              <p className="text-vikko-muted">Coming soon — Upload your prescription and configure your lenses.</p>
-            </div>
-          </Route>
+          <Route path="/rx-sports" component={RxSports} />
           <Route>
             <div className="max-w-7xl mx-auto px-4 py-20 text-center">
               <h1 className="font-display text-3xl font-bold mb-4 text-vikko-black">404</h1>
@@ -33,6 +29,14 @@ function App() {
       </main>
       <Footer />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <CartProvider>
+      <AppShell />
+    </CartProvider>
   );
 }
 

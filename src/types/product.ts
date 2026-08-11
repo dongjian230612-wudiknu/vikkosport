@@ -54,11 +54,27 @@ export interface ProductColor {
   imageUrl?: string;
 }
 
+export interface CartRxExtras {
+  rxInfo: RxInfo;
+  lensUpcharge: number;
+  lensColor?: string;
+  photochromic?: boolean;
+  polarized?: boolean;
+  scene?: string;
+  uploadName?: string;
+}
+
 export interface CartItem {
   product: Product;
   colorId: string;
   quantity: number;
   rxInfo?: RxInfo;
+  lensUpcharge?: number;
+  lensColor?: string;
+  photochromic?: boolean;
+  polarized?: boolean;
+  scene?: string;
+  uploadName?: string;
 }
 
 export interface RxInfo {
