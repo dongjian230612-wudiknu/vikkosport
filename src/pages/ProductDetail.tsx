@@ -5,10 +5,12 @@ import { Button } from '../components/ui/Button';
 import { ProductGallery } from '../components/product/ProductGallery';
 import { cn, formatPrice } from '../lib/utils';
 import { getProductBySlug } from '../data/products';
+import { useCart } from '../hooks/useCart';
 
 export function ProductDetail() {
   const [match, params] = useRoute('/product/:slug');
   const product = match && params?.slug ? getProductBySlug(params.slug) : undefined;
+  const { addItem } = useCart();
   const [selectedColor, setSelectedColor] = useState('');
   const [activeImage, setActiveImage] = useState(0);
   const [tryOnOpen, setTryOnOpen] = useState(false);
@@ -100,26 +102,22 @@ export function ProductDetail() {
             </div>
 
             <div className="flex flex-col gap-3 pt-1">
-              {product.rxCompatible ? (
-                <>
-                  <Link href={rxHref}>
-                    <Button size="lg" className="w-full uppercase tracking-wide">
-                      Build Your Own
-                    </Button>
-                  </Link>
-                  <Link href={rxHref}>
-                    <Button
-                      size="lg"
-                      className="w-full uppercase tracking-wide bg-vikko-accent hover:bg-vikko-accent/90"
-                    >
-                      Buy Prescription
-                    </Button>
-                  </Link>
-                </>
-              ) : (
-                <Button size="lg" className="w-full uppercase tracking-wide">
-                  Build Your Own
-                </Button>
+              <Button
+                size="lg"
+                className="w-full uppercase tracking-wide"
+                onClick={() => addItem(product, colorId)}
+              >
+                Add to Cart
+              </Button>
+              {product.rxCompatible && (
+                <Link href={rxHref}>
+                  <Button
+                    size="lg"
+                    className="w-full uppercase tracking-wide bg-vikko-accent hover:bg-vikko-accent/90"
+                  >
+                    Buy Prescription
+                  </Button>
+                </Link>
               )}
             </div>
 
