@@ -2,6 +2,7 @@ import { useRoute, Link } from 'wouter';
 import { useEffect, useState } from 'react';
 import { Star, ShoppingCart, Check } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { ProductGallery } from '../components/product/ProductGallery';
 import { cn, formatPrice } from '../lib/utils';
 import { getProductBySlug } from '../data/products';
 
@@ -10,6 +11,7 @@ export function ProductDetail() {
   const product = match && params?.slug ? getProductBySlug(params.slug) : undefined;
   const [selectedColor, setSelectedColor] = useState('');
   const [activeImage, setActiveImage] = useState(0);
+  const [tryOnOpen, setTryOnOpen] = useState(false);
 
   useEffect(() => {
     if (!product) return;
@@ -34,33 +36,15 @@ export function ProductDetail() {
   const color = product.colors.find(c => c.id === colorId) || product.colors[0];
 
   return (
-    <div className="animate-fade-in">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div className="space-y-4">
-            <div className="aspect-square bg-vikko-canvas rounded-lg overflow-hidden border border-vikko-border">
-              <img
-                src={product.images[activeImage]?.url}
-                alt={product.images[activeImage]?.alt}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="flex gap-3">
-              {product.images.map((img, idx) => (
-                <button
-                  key={img.url}
-                  type="button"
-                  onClick={() => setActiveImage(idx)}
-                  className={cn(
-                    'w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors cursor-pointer',
-                    activeImage === idx ? 'border-vikko-black' : 'border-vikko-border'
-                  )}
-                >
-                  <img src={img.url} alt={img.alt} className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
-          </div>
+    <div className="animate-fade-in bg-vikko-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14">
+          <ProductGallery
+            images={product.images}
+            activeIndex={activeImage}
+            onSelect={setActiveImage}
+            onTryOn={() => setTryOnOpen(true)}
+          />
 
           <div className="space-y-6">
             <div>
@@ -171,6 +155,29 @@ export function ProductDetail() {
           </div>
         </div>
       </div>
+
+      {tryOnOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-vikko-black/50 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Virtual try-on"
+          onClick={() => setTryOnOpen(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-lg bg-vikko-white p-6 shadow-xl"
+            onClick={e => e.stopPropagation()}
+          >
+            <h2 className="font-display text-xl font-bold text-vikko-black mb-2">Virtual try-on</h2>
+            <p className="text-sm text-vikko-muted mb-6">
+              Camera try-on is coming soon. For now, use the gallery angles to preview {product.name}.
+            </p>
+            <Button className="w-full" onClick={() => setTryOnOpen(false)}>
+              Close
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
