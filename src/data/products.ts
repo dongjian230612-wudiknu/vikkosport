@@ -21,9 +21,9 @@ export const products: Product[] = [
       'UV400 protection',
     ],
     images: [
-      { url: '/images/products/vs-001-front.jpg', alt: 'Velocity front view', angle: 'front' },
-      { url: '/images/products/vs-001-45.jpg', alt: 'Velocity 45 degree view', angle: '45' },
-      { url: '/images/products/vs-001-side.jpg', alt: 'Velocity side view', angle: 'side' },
+      { url: '/images/products/vs-001-front.webp', alt: 'Velocity front view', angle: 'front' },
+      { url: '/images/products/vs-001-45.webp', alt: 'Velocity 45 degree view', angle: '45' },
+      { url: '/images/products/vs-001-side.webp', alt: 'Velocity side view', angle: 'side' },
     ],
     colors: [
       { id: 'blk', name: 'Matte Black', hex: '#1a1a1a' },
@@ -63,7 +63,9 @@ export const products: Product[] = [
       'Polarized sports sunglasses with hydrophobic coating for trail running and mountain bike.',
     features: ['Polarized lenses', 'Hydrophobic coating', 'Floatable frame'],
     images: [
-      { url: '/images/products/vs-002-front.jpg', alt: 'Storm front view', angle: 'front' },
+      { url: '/images/products/vs-002-front.webp', alt: 'Storm front view', angle: 'front' },
+      { url: '/images/products/vs-002-45.webp', alt: 'Storm 45 degree view', angle: '45' },
+      { url: '/images/products/vs-002-side.webp', alt: 'Storm side view', angle: 'side' },
     ],
     colors: [
       { id: 'blu', name: 'Deep Blue', hex: '#1e3a5f' },
