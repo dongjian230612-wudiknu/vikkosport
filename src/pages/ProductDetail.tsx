@@ -1,6 +1,6 @@
 import { useRoute, Link } from 'wouter';
 import { useEffect, useState } from 'react';
-import { Star, ShoppingCart, Check } from 'lucide-react';
+import { Star, Check, Truck } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { ProductGallery } from '../components/product/ProductGallery';
 import { cn, formatPrice } from '../lib/utils';
@@ -34,6 +34,7 @@ export function ProductDetail() {
 
   const colorId = selectedColor || product.colors[0]?.id;
   const color = product.colors.find(c => c.id === colorId) || product.colors[0];
+  const rxHref = `/rx-sports?frame=${product.slug}&color=${colorId}`;
 
   return (
     <div className="animate-fade-in bg-vikko-white">
@@ -46,104 +47,88 @@ export function ProductDetail() {
             onTryOn={() => setTryOnOpen(true)}
           />
 
-          <div className="space-y-6">
+          <div className="space-y-5">
             <div>
-              <h1 className="font-display text-3xl font-bold text-vikko-black mb-2">{product.name}</h1>
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1">
+              <h1 className="font-display text-3xl sm:text-4xl font-bold text-vikko-black tracking-tight uppercase">
+                {product.name}
+              </h1>
+              <div className="mt-2 flex items-center gap-2">
+                <div className="flex items-center gap-0.5">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
                       className={cn(
                         'w-4 h-4',
                         i < Math.floor(product.rating)
-                          ? 'text-vikko-black fill-vikko-black'
+                          ? 'text-amber-400 fill-amber-400'
                           : 'text-vikko-border'
                       )}
                     />
                   ))}
                 </div>
-                <span className="text-vikko-muted text-sm">
-                  {product.rating} ({product.reviewCount} reviews)
-                </span>
+                <span className="text-vikko-muted text-sm">{product.reviewCount} reviews</span>
               </div>
             </div>
 
-            <div className="text-3xl font-bold text-vikko-black">{formatPrice(product.price)}</div>
+            <div className="text-2xl font-bold text-vikko-accent">{formatPrice(product.price)}</div>
 
-            <p className="text-vikko-muted leading-relaxed">{product.description}</p>
-
-            {product.specs && (
-              <dl className="grid grid-cols-2 gap-3 text-sm border border-vikko-border rounded-lg p-4 bg-vikko-canvas">
-                <div>
-                  <dt className="text-vikko-muted">Lens</dt>
-                  <dd className="font-medium text-vikko-black">{product.specs.lensMaterial}</dd>
-                </div>
-                <div>
-                  <dt className="text-vikko-muted">Frame</dt>
-                  <dd className="font-medium text-vikko-black">{product.specs.frameMaterial}</dd>
-                </div>
-                <div>
-                  <dt className="text-vikko-muted">Weight</dt>
-                  <dd className="font-medium text-vikko-black">{product.specs.weight}</dd>
-                </div>
-                <div>
-                  <dt className="text-vikko-muted">UV</dt>
-                  <dd className="font-medium text-vikko-black">{product.specs.uvProtection}</dd>
-                </div>
-              </dl>
-            )}
-
-            <div>
-              <h3 className="text-vikko-black font-semibold mb-3">
-                Color: <span className="text-vikko-muted font-normal">{color?.name}</span>
+            <div className="border-t border-vikko-border pt-5">
+              <h3 className="text-vikko-black text-sm mb-3">
+                {color?.name} Frame
+                {product.rxCompatible ? ' — Interchangeable' : ''}
               </h3>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-2">
                 {product.colors.map(c => (
                   <button
                     key={c.id}
                     type="button"
                     onClick={() => setSelectedColor(c.id)}
                     className={cn(
-                      'w-10 h-10 rounded-full border-2 transition-all cursor-pointer',
-                      colorId === c.id ? 'border-vikko-black scale-110' : 'border-vikko-border'
+                      'h-12 w-12 overflow-hidden rounded-md border-2 transition-colors cursor-pointer bg-vikko-canvas',
+                      colorId === c.id ? 'border-vikko-accent' : 'border-vikko-border hover:border-vikko-muted'
                     )}
-                    style={{ backgroundColor: c.hex }}
                     title={c.name}
-                  />
+                    aria-label={c.name}
+                  >
+                    <span
+                      className="block h-full w-full"
+                      style={{ backgroundColor: c.hex }}
+                    />
+                  </button>
                 ))}
               </div>
             </div>
 
-            <div className="space-y-2">
-              {product.features.map(feature => (
-                <div key={feature} className="flex items-center gap-2 text-sm text-vikko-muted">
-                  <Check className="w-4 h-4 text-vikko-accent flex-shrink-0" />
-                  {feature}
-                </div>
-              ))}
+            <div className="flex flex-col gap-3 pt-1">
+              {product.rxCompatible ? (
+                <>
+                  <Link href={rxHref}>
+                    <Button size="lg" className="w-full uppercase tracking-wide">
+                      Build Your Own
+                    </Button>
+                  </Link>
+                  <Link href={rxHref}>
+                    <Button
+                      size="lg"
+                      className="w-full uppercase tracking-wide bg-vikko-accent hover:bg-vikko-accent/90"
+                    >
+                      Buy Prescription
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <Button size="lg" className="w-full uppercase tracking-wide">
+                  Build Your Own
+                </Button>
+              )}
             </div>
 
-            <div className="flex flex-col gap-3 pt-4">
-              {product.rxCompatible ? (
-                <Link href={`/rx-sports?frame=${product.slug}&color=${colorId}`}>
-                  <Button size="lg" className="w-full uppercase tracking-wide">
-                    Select Lenses and Purchase
-                  </Button>
-                </Link>
-              ) : (
-                <Button size="lg" className="w-full gap-2">
-                  <ShoppingCart className="w-5 h-5" />
-                  Add to Cart
-                </Button>
-              )}
-              {product.rxCompatible && (
-                <Button size="lg" variant="outline" className="w-full gap-2">
-                  <ShoppingCart className="w-5 h-5" />
-                  Add Frame Only
-                </Button>
-              )}
-            </div>
+            <p className="text-vikko-muted text-sm italic flex items-start gap-2">
+              <Truck className="w-4 h-4 mt-0.5 flex-shrink-0 text-vikko-ink" />
+              <span>
+                Order by <strong className="font-semibold text-vikko-ink not-italic">2pm EST (Mon–Fri)</strong> for same-day shipping!
+              </span>
+            </p>
 
             {product.rxCompatible && (
               <p className="text-vikko-muted text-sm flex items-center gap-1">
