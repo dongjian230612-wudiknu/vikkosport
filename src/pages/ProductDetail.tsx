@@ -3,8 +3,10 @@ import { useEffect, useState } from 'react';
 import { Star, Check, Truck } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { ProductGallery } from '../components/product/ProductGallery';
+import { ProductInfoTabs } from '../components/product/ProductInfoTabs';
+import { RelatedProductCard } from '../components/product/RelatedProductCard';
 import { cn, formatPrice } from '../lib/utils';
-import { getProductBySlug } from '../data/products';
+import { getProductBySlug, getRelatedProducts } from '../data/products';
 import { useCart } from '../hooks/useCart';
 
 export function ProductDetail() {
@@ -37,6 +39,7 @@ export function ProductDetail() {
   const colorId = selectedColor || product.colors[0]?.id;
   const color = product.colors.find(c => c.id === colorId) || product.colors[0];
   const rxHref = `/rx-sports?frame=${product.slug}&color=${colorId}`;
+  const related = getRelatedProducts(product.slug, 4);
 
   return (
     <div className="animate-fade-in bg-vikko-white">
@@ -137,6 +140,23 @@ export function ProductDetail() {
             )}
           </div>
         </div>
+
+        <div className="mt-12 lg:mt-16">
+          <ProductInfoTabs product={product} />
+        </div>
+
+        {related.length > 0 && (
+          <section className="mt-14 lg:mt-20">
+            <h2 className="font-display text-center text-2xl sm:text-3xl font-bold uppercase tracking-wide text-vikko-black mb-8">
+              You May Also Like
+            </h2>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              {related.map(p => (
+                <RelatedProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
 
       {tryOnOpen && (

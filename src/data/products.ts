@@ -222,3 +222,17 @@ export function getRxCompatibleProducts(): Product[] {
 export function getProductsByCategory(category: Product['category']): Product[] {
   return products.filter(p => p.category === category);
 }
+
+/** Related products for PDP — same category first, then fill from catalog. */
+export function getRelatedProducts(slug: string, limit = 4): Product[] {
+  const current = getProductBySlug(slug);
+  if (!current) return products.slice(0, limit);
+
+  const sameCategory = products.filter(
+    p => p.slug !== slug && p.category === current.category
+  );
+  const rest = products.filter(
+    p => p.slug !== slug && p.category !== current.category
+  );
+  return [...sameCategory, ...rest].slice(0, limit);
+}
