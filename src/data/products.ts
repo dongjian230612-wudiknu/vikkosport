@@ -210,31 +210,44 @@ export const products: Product[] = [
   },
 ];
 
-export function getProductBySlug(slug: string): Product | undefined {
-  return products.find(p => p.slug === slug);
+export function getProductBySlug(
+  slug: string,
+  list: Product[] = products
+): Product | undefined {
+  return list.find(p => p.slug === slug);
 }
 
-export function getFeaturedProducts(limit = 3): Product[] {
-  return products.filter(p => p.isNew || p.rxCompatible).slice(0, limit);
+export function getFeaturedProducts(
+  limit = 3,
+  list: Product[] = products
+): Product[] {
+  return list.filter(p => p.isNew || p.rxCompatible).slice(0, limit);
 }
 
-export function getRxCompatibleProducts(): Product[] {
-  return products.filter(p => p.rxCompatible);
+export function getRxCompatibleProducts(list: Product[] = products): Product[] {
+  return list.filter(p => p.rxCompatible);
 }
 
-export function getProductsByCategory(category: Product['category']): Product[] {
-  return products.filter(p => p.category === category);
+export function getProductsByCategory(
+  category: Product['category'],
+  list: Product[] = products
+): Product[] {
+  return list.filter(p => p.category === category);
 }
 
 /** Related products for PDP — same category first, then fill from catalog. */
-export function getRelatedProducts(slug: string, limit = 4): Product[] {
-  const current = getProductBySlug(slug);
-  if (!current) return products.slice(0, limit);
+export function getRelatedProducts(
+  slug: string,
+  limit = 4,
+  list: Product[] = products
+): Product[] {
+  const current = getProductBySlug(slug, list);
+  if (!current) return list.slice(0, limit);
 
-  const sameCategory = products.filter(
+  const sameCategory = list.filter(
     p => p.slug !== slug && p.category === current.category
   );
-  const rest = products.filter(
+  const rest = list.filter(
     p => p.slug !== slug && p.category !== current.category
   );
   return [...sameCategory, ...rest].slice(0, limit);

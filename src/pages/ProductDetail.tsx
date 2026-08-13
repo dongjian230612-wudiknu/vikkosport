@@ -7,11 +7,14 @@ import { ProductInfoTabs } from '../components/product/ProductInfoTabs';
 import { RelatedProductCard } from '../components/product/RelatedProductCard';
 import { cn, formatPrice } from '../lib/utils';
 import { getProductBySlug, getRelatedProducts } from '../data/products';
+import { useCatalog } from '../lib/catalog';
 import { useCart } from '../hooks/useCart';
 
 export function ProductDetail() {
   const [match, params] = useRoute('/product/:slug');
-  const product = match && params?.slug ? getProductBySlug(params.slug) : undefined;
+  const { products, loading } = useCatalog();
+  const product =
+    match && params?.slug ? getProductBySlug(params.slug, products) : undefined;
   const { addItem } = useCart();
   const [selectedColor, setSelectedColor] = useState('');
   const [activeImage, setActiveImage] = useState(0);
@@ -24,6 +27,14 @@ export function ProductDetail() {
   }, [product]);
 
   if (!match) return null;
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-20 text-center">
+        <p className="text-vikko-muted">Loading catalog…</p>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -39,7 +50,7 @@ export function ProductDetail() {
   const colorId = selectedColor || product.colors[0]?.id;
   const color = product.colors.find(c => c.id === colorId) || product.colors[0];
   const rxHref = `/rx-sports?frame=${product.slug}&color=${colorId}`;
-  const related = getRelatedProducts(product.slug, 4);
+  const related = getRelatedProducts(product.slug, 4, products);
 
   return (
     <div className="animate-fade-in bg-vikko-white">

@@ -4,7 +4,7 @@ import { ProductCard } from '../components/product/ProductCard';
 import { Button } from '../components/ui/Button';
 import { SlidersHorizontal } from 'lucide-react';
 import { SPORTS } from '../lib/sports';
-import { products } from '../data/products';
+import { useCatalog } from '../lib/catalog';
 import type { Product } from '../types/product';
 
 const filterChips = ['All', 'Sunglasses', 'Eyeglasses', 'Accessories'];
@@ -57,6 +57,7 @@ export function Shop() {
   const params = new URLSearchParams(search);
   const { title, subtitle } = titleFromParams(params);
   const [activeChip, setActiveChip] = useState('All');
+  const { products, loading } = useCatalog();
 
   const type = params.get('type');
   const gender = params.get('gender');
@@ -65,7 +66,18 @@ export function Shop() {
   const rx = params.get('rx');
   const isNew = params.get('new');
 
+  if (loading) {
+    return (
+      <div className="animate-fade-in bg-vikko-white min-h-full">
+        <div className="max-w-7xl mx-auto px-4 py-20 text-center">
+          <p className="text-vikko-muted">Loading catalog…</p>
+        </div>
+      </div>
+    );
+  }
+
   const filtered = (() => {
+    // Trust /api/catalog (published-only). Static fallback: missing published = visible.
     let list = products;
 
     if (type === 'sunglasses' || type === 'eyeglasses' || type === 'accessories') {

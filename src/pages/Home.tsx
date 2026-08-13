@@ -3,9 +3,8 @@ import { Button } from '../components/ui/Button';
 import { ArrowRight, Shield, Truck, RotateCcw } from 'lucide-react';
 import { ProductCard } from '../components/product/ProductCard';
 import { getFeaturedProducts } from '../data/products';
+import { useCatalog } from '../lib/catalog';
 import heroSports from '../assets/hero-sports.jpg';
-
-const featuredProducts = getFeaturedProducts(3);
 
 const categories = [
   { label: "Men's Sunglasses", href: '/shop?type=sunglasses&gender=men', image: '/images/categories/mens-sunglasses.jpg' },
@@ -22,6 +21,9 @@ const sports = [
 ];
 
 export function Home() {
+  const { products, loading } = useCatalog();
+  const featuredProducts = getFeaturedProducts(3, products);
+
   return (
     <div className="animate-fade-in">
       {/* Full-bleed hero — brand + one headline + one line + CTAs */}
@@ -127,11 +129,15 @@ export function Home() {
               New arrivals
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {loading ? (
+            <p className="text-vikko-muted py-12 text-center">Loading catalog…</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredProducts.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
