@@ -1,4 +1,5 @@
 import type { Product } from '../types/product';
+import { productImageUrl } from '../lib/productImage';
 
 /**
  * Central product catalog for Vikko Sport.
@@ -21,9 +22,9 @@ export const products: Product[] = [
       'UV400 protection',
     ],
     images: [
-      { url: '/images/products/vs-001-front.webp', alt: 'Velocity front view', angle: 'front' },
-      { url: '/images/products/vs-001-45.webp', alt: 'Velocity 45 degree view', angle: '45' },
-      { url: '/images/products/vs-001-side.webp', alt: 'Velocity side view', angle: 'side' },
+      { url: productImageUrl('vs-001', 'front'), alt: 'Velocity front view', angle: 'front' },
+      { url: productImageUrl('vs-001', '45'), alt: 'Velocity 45 degree view', angle: '45' },
+      { url: productImageUrl('vs-001', 'side'), alt: 'Velocity side view', angle: 'side' },
     ],
     colors: [
       { id: 'blk', name: 'Matte Black', hex: '#1a1a1a' },
@@ -63,9 +64,9 @@ export const products: Product[] = [
       'Polarized sports sunglasses with hydrophobic coating for trail running and mountain bike.',
     features: ['Polarized lenses', 'Hydrophobic coating', 'Floatable frame'],
     images: [
-      { url: '/images/products/vs-002-front.webp', alt: 'Storm front view', angle: 'front' },
-      { url: '/images/products/vs-002-45.webp', alt: 'Storm 45 degree view', angle: '45' },
-      { url: '/images/products/vs-002-side.webp', alt: 'Storm side view', angle: 'side' },
+      { url: productImageUrl('vs-002', 'front'), alt: 'Storm front view', angle: 'front' },
+      { url: productImageUrl('vs-002', '45'), alt: 'Storm 45 degree view', angle: '45' },
+      { url: productImageUrl('vs-002', 'side'), alt: 'Storm side view', angle: 'side' },
     ],
     colors: [
       { id: 'blu', name: 'Deep Blue', hex: '#1e3a5f' },
@@ -103,7 +104,7 @@ export const products: Product[] = [
       'Prescription-ready sport eyeglasses for training and daily wear. Rx by default.',
     features: ['Rx-ready', 'TR90 frame', 'Anti-slip nose pads'],
     images: [
-      { url: '/images/products/vs-003-front.jpg', alt: 'Apex front view', angle: 'front' },
+      { url: productImageUrl('vs-003', 'front'), alt: 'Apex front view', angle: 'front' },
     ],
     colors: [
       { id: 'clr', name: 'Crystal', hex: '#e8e8e8' },
@@ -141,7 +142,7 @@ export const products: Product[] = [
       'Performance sunglasses with optical insert dock for high-Rx athletes on trail and gravel.',
     features: ['Optical insert compatible', 'Ventilated lens', 'Adjustable temple tips'],
     images: [
-      { url: '/images/products/vs-004-front.jpg', alt: 'Trail Insert front view', angle: 'front' },
+      { url: productImageUrl('vs-004', 'front'), alt: 'Trail Insert front view', angle: 'front' },
     ],
     colors: [
       { id: 'gry', name: 'Graphite', hex: '#4a4a4a' },
@@ -179,7 +180,7 @@ export const products: Product[] = [
       'Lightweight road frames with magnetic clip-on sun shield for commute-to-ride athletes.',
     features: ['Magnetic clip-on shield', 'Rx-ready base frame', 'Anti-fog vents'],
     images: [
-      { url: '/images/products/vs-005-front.jpg', alt: 'Aero Clip front view', angle: 'front' },
+      { url: productImageUrl('vs-005', 'front'), alt: 'Aero Clip front view', angle: 'front' },
     ],
     colors: [
       { id: 'wht', name: 'Arctic White', hex: '#f5f5f5' },
