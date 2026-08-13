@@ -4,6 +4,7 @@ import { Button } from '../../components/ui/Button';
 import { useRxWizard } from './store';
 import { initialRxPrescription, type RxPrescriptionDraft } from './types';
 import { RxStickyBar } from './RxStickyBar';
+import { ConfirmPrescriptionModal } from './ConfirmPrescriptionModal';
 import { cn } from '../../lib/utils';
 
 const PD_OPTIONS = ['58', '59', '60', '61', '62', '63', '64', '65', '66', '67', '68'];
@@ -230,12 +231,17 @@ export function StepUploadPrescription() {
     state.prescription ?? initialRxPrescription
   );
   const [error, setError] = useState<string | null>(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const update = (patch: Partial<RxPrescriptionDraft>) => {
     setDraft(prev => ({ ...prev, ...patch }));
   };
 
   const continueNext = () => {
+    if (!draft.sphereOd || !draft.sphereOs) {
+      setError('Please enter SPH for both eyes.');
+      return;
+    }
     const odPair = validateCylAxisPair('Right eye (OD)', draft.cylinderOd, draft.axisOd);
     if (odPair) {
       setError(odPair);
@@ -255,6 +261,11 @@ export function StepUploadPrescription() {
       return;
     }
     setError(null);
+    setConfirmOpen(true);
+  };
+
+  const confirmPrescription = () => {
+    setConfirmOpen(false);
     dispatch({ type: 'SET_PRESCRIPTION', prescription: draft });
   };
 
@@ -425,6 +436,14 @@ export function StepUploadPrescription() {
       </div>
 
       <RxStickyBar ctaLabel="Save and Continue" onCta={continueNext} />
+
+      {confirmOpen ? (
+        <ConfirmPrescriptionModal
+          draft={draft}
+          onCancel={() => setConfirmOpen(false)}
+          onConfirm={confirmPrescription}
+        />
+      ) : null}
     </div>
   );
 }
