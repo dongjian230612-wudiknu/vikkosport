@@ -22,8 +22,12 @@ function rangeDiopters(min: number, max: number, step = 0.25): string[] {
   return out;
 }
 
-/** SPH: -10.00 … +10.00 (0.25) */
-const SPH_OPTIONS = rangeDiopters(-10, 10);
+/** SPH: 0.00 first, then −0.25…−10.00, then +0.25…+10.00 (0.25) */
+const SPH_OPTIONS = [
+  '0.00',
+  ...rangeDiopters(-10, -0.25).reverse(),
+  ...rangeDiopters(0.25, 10),
+];
 /** CYL: 0.00 … -6.00 (0.25), shown 0 → more minus */
 const CYL_OPTIONS = rangeDiopters(-6, 0).reverse();
 /** AXIS: 1 … 180 */
