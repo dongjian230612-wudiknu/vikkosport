@@ -5,6 +5,7 @@ import { Home } from './pages/Home';
 import { Shop } from './pages/Shop';
 import { ProductDetail } from './pages/ProductDetail';
 import { RxSports } from './pages/RxSports';
+import { Admin } from './pages/Admin';
 import { CartProvider, useCart } from './hooks/useCart';
 
 function AppShell() {
@@ -19,6 +20,7 @@ function AppShell() {
           <Route path="/shop" component={Shop} />
           <Route path="/product/:slug" component={ProductDetail} />
           <Route path="/rx-sports" component={RxSports} />
+          <Route path="/admin" component={Admin} />
           <Route>
             <div className="max-w-7xl mx-auto px-4 py-20 text-center">
               <h1 className="font-display text-3xl font-bold mb-4 text-vikko-black">404</h1>
