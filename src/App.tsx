@@ -7,6 +7,7 @@ import { ProductDetail } from './pages/ProductDetail';
 import { RxSports } from './pages/RxSports';
 import { Admin } from './pages/Admin';
 import { CartProvider, useCart } from './hooks/useCart';
+import { CatalogProvider } from './lib/catalog';
 
 function AppShell() {
   const { totalItems } = useCart();
@@ -36,9 +37,11 @@ function AppShell() {
 
 function App() {
   return (
-    <CartProvider>
-      <AppShell />
-    </CartProvider>
+    <CatalogProvider>
+      <CartProvider>
+        <AppShell />
+      </CartProvider>
+    </CatalogProvider>
   );
 }
 
