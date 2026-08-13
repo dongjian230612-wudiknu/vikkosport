@@ -36,6 +36,27 @@ const fieldClass =
 const triggerClass =
   'flex w-full items-center justify-between gap-1 rounded-md border border-vikko-border bg-vikko-white px-2 py-2.5 text-center text-sm text-vikko-black outline-none hover:border-vikko-muted focus:border-vikko-accent';
 
+/** CYL and AXIS must pair: real cylinder requires axis; plano/empty cyl clears axis */
+function hasCylinder(cyl: string): boolean {
+  return Boolean(cyl) && cyl !== '0.00';
+}
+
+function validateCylAxisPair(
+  eye: string,
+  cyl: string,
+  axis: string
+): string | null {
+  const cylOn = hasCylinder(cyl);
+  const axisOn = Boolean(axis);
+  if (cylOn && !axisOn) {
+    return `${eye}: enter AXIS when CYL is set.`;
+  }
+  if (!cylOn && axisOn) {
+    return `${eye}: clear AXIS when there is no CYL (or set CYL).`;
+  }
+  return null;
+}
+
 function RxScrollSelect({
   label,
   value,
@@ -43,6 +64,7 @@ function RxScrollSelect({
   placeholder = 'Select',
   centerOn = '0.00',
   scrollBlock = 'center',
+  disabled = false,
   onChange,
 }: {
   label: string;
@@ -53,6 +75,7 @@ function RxScrollSelect({
   centerOn?: string;
   /** AXIS opens at top from 1; SPH/CYL keep mid-list center */
   scrollBlock?: ScrollLogicalPosition;
+  disabled?: boolean;
   onChange: (v: string) => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -68,6 +91,10 @@ function RxScrollSelect({
     document.addEventListener('mousedown', onDoc);
     return () => document.removeEventListener('mousedown', onDoc);
   }, [open]);
+
+  useEffect(() => {
+    if (disabled) setOpen(false);
+  }, [disabled]);
 
   useEffect(() => {
     if (!open || !listRef.current) return;
@@ -87,16 +114,20 @@ function RxScrollSelect({
       </span>
       <button
         type="button"
-        className={triggerClass}
+        className={cn(triggerClass, disabled && 'cursor-not-allowed opacity-50')}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={listId}
-        onClick={() => setOpen(o => !o)}
+        disabled={disabled}
+        onClick={() => {
+          if (disabled) return;
+          setOpen(o => !o);
+        }}
       >
         <span className={cn('flex-1 truncate', !value && 'text-vikko-muted')}>{display}</span>
         <ChevronDown className="h-3.5 w-3.5 shrink-0 text-vikko-muted" />
       </button>
-      {open ? (
+      {open && !disabled ? (
         <ul
           id={listId}
           ref={listRef}
@@ -153,6 +184,8 @@ function EyeCard({
   onCylinder: (v: string) => void;
   onAxis: (v: string) => void;
 }) {
+  const cylOn = hasCylinder(cylinder);
+
   return (
     <div className="rounded-lg border border-vikko-border bg-vikko-white p-4 sm:p-5 overflow-visible">
       <div className="mb-4 flex items-center justify-between gap-3">
@@ -183,6 +216,7 @@ function EyeCard({
           placeholder="—"
           centerOn="1"
           scrollBlock="start"
+          disabled={!cylOn}
           onChange={onAxis}
         />
       </div>
@@ -202,6 +236,16 @@ export function StepUploadPrescription() {
   };
 
   const continueNext = () => {
+    const odPair = validateCylAxisPair('Right eye (OD)', draft.cylinderOd, draft.axisOd);
+    if (odPair) {
+      setError(odPair);
+      return;
+    }
+    const osPair = validateCylAxisPair('Left eye (OS)', draft.cylinderOs, draft.axisOs);
+    if (osPair) {
+      setError(osPair);
+      return;
+    }
     if (!draft.pd && !(draft.dualPd && draft.pdLeft && draft.pdRight)) {
       setError('Please choose your PD.');
       return;
@@ -259,7 +303,13 @@ export function StepUploadPrescription() {
               cylinder={draft.cylinderOd}
               axis={draft.axisOd}
               onSphere={v => update({ sphereOd: v })}
-              onCylinder={v => update({ cylinderOd: v })}
+              onCylinder={v =>
+                update(
+                  hasCylinder(v)
+                    ? { cylinderOd: v }
+                    : { cylinderOd: v, axisOd: '' }
+                )
+              }
               onAxis={v => update({ axisOd: v })}
             />
             <EyeCard
@@ -269,7 +319,13 @@ export function StepUploadPrescription() {
               cylinder={draft.cylinderOs}
               axis={draft.axisOs}
               onSphere={v => update({ sphereOs: v })}
-              onCylinder={v => update({ cylinderOs: v })}
+              onCylinder={v =>
+                update(
+                  hasCylinder(v)
+                    ? { cylinderOs: v }
+                    : { cylinderOs: v, axisOs: '' }
+                )
+              }
               onAxis={v => update({ axisOs: v })}
             />
 
