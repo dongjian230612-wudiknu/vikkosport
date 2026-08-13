@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { Paperclip } from 'lucide-react';
+import { useEffect, useId, useRef, useState } from 'react';
+import { Check, ChevronDown, Paperclip } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { useRxWizard } from './store';
 import { initialRxPrescription, type RxPrescriptionDraft } from './types';
 import { RxStickyBar } from './RxStickyBar';
+import { cn } from '../../lib/utils';
 
 const PD_OPTIONS = ['58', '59', '60', '61', '62', '63', '64', '65', '66', '67', '68'];
 
@@ -22,19 +23,113 @@ function rangeDiopters(min: number, max: number, step = 0.25): string[] {
   return out;
 }
 
-/** SPH: 0.00 first, then −0.25…−10.00, then +0.25…+10.00 (0.25) */
-const SPH_OPTIONS = [
-  '0.00',
-  ...rangeDiopters(-10, -0.25).reverse(),
-  ...rangeDiopters(0.25, 10),
-];
-/** CYL: 0.00 … -6.00 (0.25), shown 0 → more minus */
+/** SPH natural order: −10.00 … 0.00 … +10.00 — open centered on 0 */
+const SPH_OPTIONS = rangeDiopters(-10, 10);
+/** CYL: 0.00 at mid-top of negatives… use 0 → −6 for picker; center on 0 */
 const CYL_OPTIONS = rangeDiopters(-6, 0).reverse();
 /** AXIS: 1 … 180 */
 const AXIS_OPTIONS = Array.from({ length: 180 }, (_, i) => String(i + 1));
 
 const fieldClass =
-  'w-full rounded-md border border-vikko-border bg-vikko-white px-2 py-2.5 text-center text-sm text-vikko-black outline-none focus:border-vikko-accent';
+  'w-full rounded-md border border-vikko-border bg-vikko-white px-2 py-2.5 text-sm text-vikko-black outline-none focus:border-vikko-accent';
+
+const triggerClass =
+  'flex w-full items-center justify-between gap-1 rounded-md border border-vikko-border bg-vikko-white px-2 py-2.5 text-center text-sm text-vikko-black outline-none hover:border-vikko-muted focus:border-vikko-accent';
+
+function RxScrollSelect({
+  label,
+  value,
+  options,
+  placeholder = 'Select',
+  centerOn = '0.00',
+  onChange,
+}: {
+  label: string;
+  value: string;
+  options: string[];
+  placeholder?: string;
+  /** Value to scroll into view when opening (fig.1: SPH opens at 0.00 mid-list) */
+  centerOn?: string;
+  onChange: (v: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const listRef = useRef<HTMLUListElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const listId = useId();
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', onDoc);
+    return () => document.removeEventListener('mousedown', onDoc);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open || !listRef.current) return;
+    const targetValue = value || centerOn;
+    const el = listRef.current.querySelector<HTMLElement>(`[data-value="${CSS.escape(targetValue)}"]`);
+    if (el) {
+      el.scrollIntoView({ block: 'center' });
+    }
+  }, [open, value, centerOn]);
+
+  const display = value || placeholder;
+
+  return (
+    <div className="relative block space-y-1.5" ref={rootRef}>
+      <span className="text-[11px] font-semibold uppercase tracking-wide text-vikko-muted">
+        {label}
+      </span>
+      <button
+        type="button"
+        className={triggerClass}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={listId}
+        onClick={() => setOpen(o => !o)}
+      >
+        <span className={cn('flex-1 truncate', !value && 'text-vikko-muted')}>{display}</span>
+        <ChevronDown className="h-3.5 w-3.5 shrink-0 text-vikko-muted" />
+      </button>
+      {open ? (
+        <ul
+          id={listId}
+          ref={listRef}
+          role="listbox"
+          className="absolute z-30 mt-1 max-h-56 w-full overflow-y-auto rounded-md border border-vikko-border bg-vikko-white py-1 shadow-lg"
+        >
+          {options.map(opt => {
+            const selected = value === opt;
+            return (
+              <li key={opt} role="option" aria-selected={selected} data-value={opt}>
+                <button
+                  type="button"
+                  className={cn(
+                    'flex w-full items-center gap-2 px-3 py-2 text-left text-sm',
+                    selected
+                      ? 'bg-vikko-accent text-vikko-white'
+                      : 'text-vikko-ink hover:bg-vikko-canvas'
+                  )}
+                  onClick={() => {
+                    onChange(opt);
+                    setOpen(false);
+                  }}
+                >
+                  <span className="w-4 shrink-0">
+                    {selected ? <Check className="h-3.5 w-3.5" /> : null}
+                  </span>
+                  {opt}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      ) : null}
+    </div>
+  );
+}
 
 function EyeCard({
   title,
@@ -56,7 +151,7 @@ function EyeCard({
   onAxis: (v: string) => void;
 }) {
   return (
-    <div className="rounded-lg border border-vikko-border bg-vikko-white p-4 sm:p-5">
+    <div className="rounded-lg border border-vikko-border bg-vikko-white p-4 sm:p-5 overflow-visible">
       <div className="mb-4 flex items-center justify-between gap-3">
         <h3 className="font-semibold text-vikko-black">{title}</h3>
         <span className="rounded bg-vikko-canvas px-2 py-0.5 text-xs font-medium text-vikko-muted">
@@ -64,45 +159,28 @@ function EyeCard({
         </span>
       </div>
       <div className="grid grid-cols-3 gap-3">
-        <label className="block space-y-1.5">
-          <span className="text-[11px] font-semibold uppercase tracking-wide text-vikko-muted">
-            SPH
-          </span>
-          <select value={sphere} onChange={e => onSphere(e.target.value)} className={fieldClass}>
-            <option value="">Select</option>
-            {SPH_OPTIONS.map(v => (
-              <option key={v} value={v}>
-                {v}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="block space-y-1.5">
-          <span className="text-[11px] font-semibold uppercase tracking-wide text-vikko-muted">
-            CYL
-          </span>
-          <select value={cylinder} onChange={e => onCylinder(e.target.value)} className={fieldClass}>
-            <option value="">Select</option>
-            {CYL_OPTIONS.map(v => (
-              <option key={v} value={v}>
-                {v}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="block space-y-1.5">
-          <span className="text-[11px] font-semibold uppercase tracking-wide text-vikko-muted">
-            AXIS
-          </span>
-          <select value={axis} onChange={e => onAxis(e.target.value)} className={fieldClass}>
-            <option value="">—</option>
-            {AXIS_OPTIONS.map(v => (
-              <option key={v} value={v}>
-                {v}
-              </option>
-            ))}
-          </select>
-        </label>
+        <RxScrollSelect
+          label="SPH"
+          value={sphere}
+          options={SPH_OPTIONS}
+          centerOn="0.00"
+          onChange={onSphere}
+        />
+        <RxScrollSelect
+          label="CYL"
+          value={cylinder}
+          options={CYL_OPTIONS}
+          centerOn="0.00"
+          onChange={onCylinder}
+        />
+        <RxScrollSelect
+          label="AXIS"
+          value={axis}
+          options={AXIS_OPTIONS}
+          placeholder="—"
+          centerOn="90"
+          onChange={onAxis}
+        />
       </div>
     </div>
   );
