@@ -42,9 +42,14 @@ Complete these steps in order:
 5. **Seed the product catalog** (optional — `GET /api/catalog` also auto-seeds when KV is empty):
 
    ```bash
-   # After login, POST with Bearer token:
-   # POST /api/admin/products/seed
-   # Body: {} or { "force": true } to overwrite
+   WORKER_URL=https://vikkosport-images-admin.<subdomain>.workers.dev
+   TOKEN=$(curl -s -X POST "$WORKER_URL/api/admin/login" \
+     -H "Content-Type: application/json" \
+     -d '{"password":"<ADMIN_PASSWORD>"}' | jq -r '.data.token')
+   curl -s -X POST "$WORKER_URL/api/admin/products/seed" \
+     -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/json" \
+     -d '{}'   # or { "force": true } to overwrite
    ```
 
 6. **Point the frontend at the Worker** — set `VITE_API_BASE_URL` to the Worker URL (leave `VITE_CF_IMAGES_HASH` empty for now):
@@ -66,10 +71,10 @@ Complete these steps in order:
 
 9. **Redeploy the frontend** so the hash (and API URL) take effect (`npm run build` locally or push to trigger CI).
 
-10. **Smoke test:**
-   - `GET /api/catalog` returns published products.
-   - Confirm PDP/shop images load from `imagedelivery.net` for uploaded SKUs.
-   - Re-upload via `/admin` if needed and verify the new asset appears (cache-bust / hard refresh).
+10. **Smoke test — catalog + product admin:**
+   - **Public catalog:** `curl -s "$WORKER_URL/api/catalog"` returns `{ "success": true, "data": [ ... ] }` with published products only.
+   - **Product admin UI:** open `/admin/products` on the frontend (login with `ADMIN_PASSWORD`). List loads from `GET /api/admin/products`; use **New Product** to create, then edit General / Status / RX / Media link on `/admin/products/:id`.
+   - **Images (optional):** confirm PDP/shop images load from `imagedelivery.net` for uploaded SKUs; re-upload via `/admin` if needed (hard refresh).
 
 ## Product catalog API
 
