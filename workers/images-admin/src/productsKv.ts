@@ -88,6 +88,20 @@ function slugifyProductName(name: string): string {
     .replace(/^-|-$/g, '');
 }
 
+export function ensureUniqueSlug(
+  slug: string,
+  existing: Product[],
+  excludeId?: string
+): string {
+  const taken = new Set(
+    existing.filter(p => p.id !== excludeId).map(p => p.slug)
+  );
+  if (!taken.has(slug)) return slug;
+  let n = 2;
+  while (taken.has(`${slug}-${n}`)) n += 1;
+  return `${slug}-${n}`;
+}
+
 export async function readAll(env: ProductsEnv): Promise<Product[]> {
   const raw = await env.PRODUCTS.get(CATALOG_KEY, 'json');
   if (!Array.isArray(raw)) return [];
@@ -153,7 +167,7 @@ export function createProduct(
     id: crypto.randomUUID(),
     sku,
     name,
-    slug: slugifyProductName(name),
+    slug: ensureUniqueSlug(slugifyProductName(name), existing),
     price,
     description: '',
     features: [],
@@ -176,7 +190,8 @@ export function createProduct(
 
 export function updateProduct(
   current: Product,
-  body: UpdateProductBody
+  body: UpdateProductBody,
+  existing: Product[] = []
 ): { ok: true; product: Product } | { ok: false; message: string } {
   if ('sku' in body && body.sku !== undefined && String(body.sku) !== current.sku) {
     return { ok: false, message: 'sku cannot be changed' };
@@ -198,7 +213,7 @@ export function updateProduct(
     if (typeof body.slug !== 'string' || !body.slug.trim()) {
       return { ok: false, message: 'slug cannot be empty' };
     }
-    next.slug = body.slug.trim();
+    next.slug = ensureUniqueSlug(body.slug.trim(), existing, current.id);
   }
 
   if (body.description !== undefined) {

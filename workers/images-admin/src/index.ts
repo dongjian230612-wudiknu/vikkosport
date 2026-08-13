@@ -179,7 +179,7 @@ export default {
         if (idx === -1) {
           return json({ success: false, message: 'Product not found' }, 404, origin);
         }
-        const updated = updateProduct(all[idx], body);
+        const updated = updateProduct(all[idx], body, all);
         if (!updated.ok) {
           return json({ success: false, message: updated.message }, 400, origin);
         }

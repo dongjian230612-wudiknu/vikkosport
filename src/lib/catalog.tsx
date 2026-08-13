@@ -9,6 +9,11 @@ import {
 import { products as fallbackProducts } from '../data/products';
 import type { Product } from '../types/product';
 import { fetchPublicCatalog } from './adminApi';
+import { resolveProductImages } from './productImage';
+
+function hydrateCatalog(list: Product[]): Product[] {
+  return list.map(resolveProductImages);
+}
 
 interface CatalogContextValue {
   products: Product[];
@@ -20,7 +25,7 @@ interface CatalogContextValue {
 const CatalogContext = createContext<CatalogContextValue | null>(null);
 
 export function CatalogProvider({ children }: { children: ReactNode }) {
-  const [products, setProducts] = useState<Product[]>(fallbackProducts);
+  const [products, setProducts] = useState<Product[]>(() => hydrateCatalog(fallbackProducts));
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,13 +35,13 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
     try {
       const data = await fetchPublicCatalog();
       if (!data.length) {
-        setProducts(fallbackProducts);
+        setProducts(hydrateCatalog(fallbackProducts));
         setError('Catalog empty; using local products');
       } else {
-        setProducts(data);
+        setProducts(hydrateCatalog(data));
       }
     } catch (err) {
-      setProducts(fallbackProducts);
+      setProducts(hydrateCatalog(fallbackProducts));
       setError(err instanceof Error ? err.message : 'Failed to load catalog');
     } finally {
       setLoading(false);
