@@ -5,7 +5,10 @@ import { Home } from './pages/Home';
 import { Shop } from './pages/Shop';
 import { ProductDetail } from './pages/ProductDetail';
 import { RxSports } from './pages/RxSports';
-import { Admin } from './pages/Admin';
+import { AdminShell } from './pages/admin/AdminShell';
+import { ProductList } from './pages/admin/ProductList';
+import { ProductEdit } from './pages/admin/ProductEdit';
+import { AdminImages } from './pages/admin/AdminImages';
 import { CartProvider, useCart } from './hooks/useCart';
 import { CatalogProvider } from './lib/catalog';
 
@@ -21,7 +24,24 @@ function AppShell() {
           <Route path="/shop" component={Shop} />
           <Route path="/product/:slug" component={ProductDetail} />
           <Route path="/rx-sports" component={RxSports} />
-          <Route path="/admin" component={Admin} />
+          <Route path="/admin/products/:id">
+            <AdminShell>
+              <ProductEdit />
+            </AdminShell>
+          </Route>
+          <Route path="/admin/products">
+            <AdminShell>
+              <ProductList />
+            </AdminShell>
+          </Route>
+          <Route path="/admin/images">
+            <AdminShell>
+              <AdminImages />
+            </AdminShell>
+          </Route>
+          <Route path="/admin">
+            <AdminShell />
+          </Route>
           <Route>
             <div className="max-w-7xl mx-auto px-4 py-20 text-center">
               <h1 className="font-display text-3xl font-bold mb-4 text-vikko-black">404</h1>
