@@ -11,6 +11,11 @@ const RX_TYPES: RxType[] = ['direct', 'insert', 'clip-on'];
 
 const cardClass = 'rounded-lg border border-vikko-border bg-vikko-white p-6';
 
+function resolvedRxType(rxCompatible: boolean, rxType: RxType | null | undefined): RxType | null {
+  if (!rxCompatible) return null;
+  return rxType ?? 'direct';
+}
+
 export function ProductEdit() {
   const token = useAdminToken();
   const [match, params] = useRoute('/admin/products/:id');
@@ -51,7 +56,7 @@ export function ProductEdit() {
         setCategory(p.category);
         setPublished(p.published !== false);
         setRxCompatible(p.rxCompatible);
-        setRxType(p.rxType ?? null);
+        setRxType(resolvedRxType(p.rxCompatible, p.rxType));
         setImageSku(p.imageSku || normalizeImageSku(p.sku));
       })
       .catch((err) => {
@@ -91,7 +96,7 @@ export function ProductEdit() {
         category,
         published,
         rxCompatible,
-        rxType: rxCompatible ? rxType : null,
+        rxType: resolvedRxType(rxCompatible, rxType),
       });
       setName(next.name);
       setSlug(next.slug);
@@ -100,7 +105,7 @@ export function ProductEdit() {
       setCategory(next.category);
       setPublished(next.published !== false);
       setRxCompatible(next.rxCompatible);
-      setRxType(next.rxType ?? null);
+      setRxType(resolvedRxType(next.rxCompatible, next.rxType));
       setSaved(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Save failed');
