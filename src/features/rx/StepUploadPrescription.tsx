@@ -42,6 +42,7 @@ function RxScrollSelect({
   options,
   placeholder = 'Select',
   centerOn = '0.00',
+  scrollBlock = 'center',
   onChange,
 }: {
   label: string;
@@ -50,6 +51,8 @@ function RxScrollSelect({
   placeholder?: string;
   /** Value to scroll into view when opening (fig.1: SPH opens at 0.00 mid-list) */
   centerOn?: string;
+  /** AXIS opens at top from 1; SPH/CYL keep mid-list center */
+  scrollBlock?: ScrollLogicalPosition;
   onChange: (v: string) => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -71,9 +74,9 @@ function RxScrollSelect({
     const targetValue = value || centerOn;
     const el = listRef.current.querySelector<HTMLElement>(`[data-value="${CSS.escape(targetValue)}"]`);
     if (el) {
-      el.scrollIntoView({ block: 'center' });
+      el.scrollIntoView({ block: value ? 'center' : scrollBlock });
     }
-  }, [open, value, centerOn]);
+  }, [open, value, centerOn, scrollBlock]);
 
   const display = value || placeholder;
 
@@ -178,7 +181,8 @@ function EyeCard({
           value={axis}
           options={AXIS_OPTIONS}
           placeholder="—"
-          centerOn="90"
+          centerOn="1"
+          scrollBlock="start"
           onChange={onAxis}
         />
       </div>
