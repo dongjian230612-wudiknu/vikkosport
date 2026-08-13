@@ -101,7 +101,7 @@ function RxScrollSelect({
           id={listId}
           ref={listRef}
           role="listbox"
-          className="absolute z-30 mt-1 max-h-[min(28rem,70vh)] w-full overflow-y-auto rounded-md border border-vikko-border bg-vikko-white py-1 shadow-lg"
+          className="absolute z-30 mt-1 max-h-[min(36rem,80vh)] w-full overflow-y-auto rounded-md border border-vikko-border bg-vikko-white py-1 shadow-lg"
         >
           {options.map(opt => {
             const selected = value === opt;
