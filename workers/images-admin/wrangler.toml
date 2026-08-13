@@ -5,9 +5,8 @@ compatibility_date = "2025-08-01"
 # Phase 1: workers.dev URL is fine. Later attach api-dev.vikkosport.com.
 # routes = [{ pattern = "api-dev.vikkosport.com/*", zone_name = "vikkosport.com" }]
 
-# Create with: npx wrangler kv namespace create PRODUCTS
-# then paste the real id below (placeholder is intentional until created).
+# KV namespace for product catalog (created 2026-08-13)
 [[kv_namespaces]]
 binding = "PRODUCTS"
-id = "REPLACE_AFTER_wrangler_kv_namespace_create"
+id = "fbb49ec1e937492bb8aad87625ef2add"
 # preview_id optional
