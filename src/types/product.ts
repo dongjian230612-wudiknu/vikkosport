@@ -19,6 +19,12 @@ export interface Product {
   /** Sport / activity tags used by shop filters (e.g. cycling, running). */
   tags: string[];
   inStock: boolean;
+  /** Optional inventory count; inStock derived when stock is provided. */
+  stock?: number;
+  /** Default true when missing (seed compatibility). */
+  published?: boolean;
+  /** Normalized SKU for CF Images ids, e.g. vs-006. */
+  imageSku?: string;
   rxCompatible: boolean;
   /** How prescription is supported when rxCompatible is true. */
   rxType?: RxType | null;
