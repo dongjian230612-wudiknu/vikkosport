@@ -1,7 +1,7 @@
 # Vikko Sport — Product Image Admin (Cloudflare Images)
 
 **Date:** 2026-08-13  
-**Status:** Draft — awaiting user review  
+**Status:** Approved  
 **Scope:** Upload / replace product gallery images only (no price, inventory, or order admin)
 
 ## Goal
