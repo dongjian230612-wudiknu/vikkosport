@@ -1,8 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Button } from '../components/ui/Button';
 import { adminLogin, createDirectUpload, uploadToCloudflare } from '../lib/adminApi';
-import { productImageUrl, type ProductImageAngle } from '../lib/productImage';
-
 const TOKEN_KEY = 'vikko_admin_token';
 const SKUS = ['vs-001', 'vs-002', 'vs-003', 'vs-004', 'vs-005'] as const;
 const ANGLES: Array<'front' | '45' | 'side'> = ['front', '45', 'side'];
@@ -72,7 +70,12 @@ export function Admin() {
     try {
       const { uploadURL, id } = await createDirectUpload(token, sku, angle);
       await uploadToCloudflare(uploadURL, file);
-      const url = `${productImageUrl(sku, angle as ProductImageAngle)}?t=${Date.now()}`;
+      // Prefer CDN when hash is set; otherwise preview the selected file locally
+      // (local /images/products path often does not exist after CF-only upload).
+      const hash = (import.meta.env.VITE_CF_IMAGES_HASH as string | undefined)?.trim() ?? '';
+      const url = hash
+        ? `https://imagedelivery.net/${hash}/${id}/public?t=${Date.now()}`
+        : URL.createObjectURL(file);
       setPreviewUrl(url);
       setUploadedId(id);
     } catch (err) {
