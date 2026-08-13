@@ -7,8 +7,30 @@ import { RxStickyBar } from './RxStickyBar';
 
 const PD_OPTIONS = ['58', '59', '60', '61', '62', '63', '64', '65', '66', '67', '68'];
 
+/** Format diopter for display: +1.25 / 0.00 / -1.25 */
+function formatDiopter(n: number): string {
+  if (Object.is(n, -0) || n === 0) return '0.00';
+  const fixed = n.toFixed(2);
+  return n > 0 ? `+${fixed}` : fixed;
+}
+
+function rangeDiopters(min: number, max: number, step = 0.25): string[] {
+  const out: string[] = [];
+  for (let v = min; v <= max + 1e-9; v = Math.round((v + step) * 100) / 100) {
+    out.push(formatDiopter(v));
+  }
+  return out;
+}
+
+/** SPH: -10.00 … +10.00 (0.25) */
+const SPH_OPTIONS = rangeDiopters(-10, 10);
+/** CYL: 0.00 … -6.00 (0.25), shown 0 → more minus */
+const CYL_OPTIONS = rangeDiopters(-6, 0).reverse();
+/** AXIS: 1 … 180 */
+const AXIS_OPTIONS = Array.from({ length: 180 }, (_, i) => String(i + 1));
+
 const fieldClass =
-  'w-full rounded-md border border-vikko-border bg-vikko-white px-3 py-2.5 text-center text-sm text-vikko-black outline-none focus:border-vikko-accent';
+  'w-full rounded-md border border-vikko-border bg-vikko-white px-2 py-2.5 text-center text-sm text-vikko-black outline-none focus:border-vikko-accent';
 
 function EyeCard({
   title,
@@ -42,37 +64,40 @@ function EyeCard({
           <span className="text-[11px] font-semibold uppercase tracking-wide text-vikko-muted">
             SPH
           </span>
-          <input
-            value={sphere}
-            onChange={e => onSphere(e.target.value)}
-            className={fieldClass}
-            placeholder="0.00"
-            inputMode="decimal"
-          />
+          <select value={sphere} onChange={e => onSphere(e.target.value)} className={fieldClass}>
+            <option value="">Select</option>
+            {SPH_OPTIONS.map(v => (
+              <option key={v} value={v}>
+                {v}
+              </option>
+            ))}
+          </select>
         </label>
         <label className="block space-y-1.5">
           <span className="text-[11px] font-semibold uppercase tracking-wide text-vikko-muted">
             CYL
           </span>
-          <input
-            value={cylinder}
-            onChange={e => onCylinder(e.target.value)}
-            className={fieldClass}
-            placeholder="0.00"
-            inputMode="decimal"
-          />
+          <select value={cylinder} onChange={e => onCylinder(e.target.value)} className={fieldClass}>
+            <option value="">Select</option>
+            {CYL_OPTIONS.map(v => (
+              <option key={v} value={v}>
+                {v}
+              </option>
+            ))}
+          </select>
         </label>
         <label className="block space-y-1.5">
           <span className="text-[11px] font-semibold uppercase tracking-wide text-vikko-muted">
             AXIS
           </span>
-          <input
-            value={axis}
-            onChange={e => onAxis(e.target.value)}
-            className={fieldClass}
-            placeholder="—"
-            inputMode="numeric"
-          />
+          <select value={axis} onChange={e => onAxis(e.target.value)} className={fieldClass}>
+            <option value="">—</option>
+            {AXIS_OPTIONS.map(v => (
+              <option key={v} value={v}>
+                {v}
+              </option>
+            ))}
+          </select>
         </label>
       </div>
     </div>
