@@ -1,0 +1,209 @@
+[
+  {
+    "id": "1",
+    "sku": "VS-001-BLK",
+    "name": "Vikko Velocity",
+    "slug": "vikko-velocity-black",
+    "price": 149,
+    "description": "Ultra-lightweight cycling sunglasses with interchangeable lenses. The Velocity frame weighs just 24g and features adjustable nose pads for a secure fit during high-intensity rides.",
+    "features": [
+      "Interchangeable PC lenses (clear, smoke, revo red)",
+      "TR90 ultra-lightweight frame (24g)",
+      "Adjustable rubber nose pads",
+      "Anti-slip temple tips",
+      "UV400 protection"
+    ],
+    "images": [
+      { "url": "/images/products/vs-001-front.webp", "alt": "Velocity front view", "angle": "front" },
+      { "url": "/images/products/vs-001-45.webp", "alt": "Velocity 45 degree view", "angle": "45" },
+      { "url": "/images/products/vs-001-side.webp", "alt": "Velocity side view", "angle": "side" }
+    ],
+    "colors": [
+      { "id": "blk", "name": "Matte Black", "hex": "#1a1a1a" },
+      { "id": "wht", "name": "Arctic White", "hex": "#f5f5f5" },
+      { "id": "blu", "name": "Deep Blue", "hex": "#1e3a5f" }
+    ],
+    "category": "sunglasses",
+    "gender": "men",
+    "fit": "medium",
+    "isNew": true,
+    "tags": ["road-cycling", "gravel-cycling", "cycling", "running"],
+    "inStock": true,
+    "published": true,
+    "imageSku": "vs-001",
+    "rxCompatible": true,
+    "rxType": "direct",
+    "specs": {
+      "lensMaterial": "Polycarbonate",
+      "frameMaterial": "TR90",
+      "weight": "24g",
+      "uvProtection": "UV400"
+    },
+    "lensOptions": {
+      "colors": ["Clear", "Smoke", "Revo Red"],
+      "photochromic": false,
+      "polarized": false
+    },
+    "rating": 4.8,
+    "reviewCount": 124
+  },
+  {
+    "id": "2",
+    "sku": "VS-002-BLU",
+    "name": "Vikko Storm",
+    "slug": "vikko-storm-blue",
+    "price": 179,
+    "originalPrice": 199,
+    "description": "Polarized sports sunglasses with hydrophobic coating for trail running and mountain bike.",
+    "features": ["Polarized lenses", "Hydrophobic coating", "Floatable frame"],
+    "images": [
+      { "url": "/images/products/vs-002-front.webp", "alt": "Storm front view", "angle": "front" },
+      { "url": "/images/products/vs-002-45.webp", "alt": "Storm 45 degree view", "angle": "45" },
+      { "url": "/images/products/vs-002-side.webp", "alt": "Storm side view", "angle": "side" }
+    ],
+    "colors": [
+      { "id": "blu", "name": "Deep Blue", "hex": "#1e3a5f" },
+      { "id": "red", "name": "Racing Red", "hex": "#c41e3a" }
+    ],
+    "category": "sunglasses",
+    "gender": "women",
+    "fit": "small",
+    "isNew": false,
+    "tags": ["trail-running", "mountain-bike", "running", "cycling"],
+    "inStock": true,
+    "published": true,
+    "imageSku": "vs-002",
+    "rxCompatible": false,
+    "rxType": null,
+    "specs": {
+      "lensMaterial": "Polarized polycarbonate",
+      "frameMaterial": "Grilamid",
+      "weight": "29g",
+      "uvProtection": "UV400"
+    },
+    "lensOptions": {
+      "colors": ["Smoke", "Blue Mirror"],
+      "photochromic": false,
+      "polarized": true
+    },
+    "rating": 4.6,
+    "reviewCount": 89
+  },
+  {
+    "id": "3",
+    "sku": "VS-003-CLR",
+    "name": "Vikko Apex",
+    "slug": "vikko-apex-clear",
+    "price": 159,
+    "description": "Prescription-ready sport eyeglasses for training and daily wear. Rx by default.",
+    "features": ["Rx-ready", "TR90 frame", "Anti-slip nose pads"],
+    "images": [
+      { "url": "/images/products/vs-003-front.webp", "alt": "Apex front view", "angle": "front" }
+    ],
+    "colors": [
+      { "id": "clr", "name": "Crystal", "hex": "#e8e8e8" },
+      { "id": "blk", "name": "Matte Black", "hex": "#1a1a1a" }
+    ],
+    "category": "eyeglasses",
+    "gender": "men",
+    "fit": "large",
+    "isNew": true,
+    "tags": ["cycling", "running"],
+    "inStock": true,
+    "published": true,
+    "imageSku": "vs-003",
+    "rxCompatible": true,
+    "rxType": "direct",
+    "specs": {
+      "lensMaterial": "Rx-ready demo lenses",
+      "frameMaterial": "TR90",
+      "weight": "26g",
+      "uvProtection": "UV400 with tint options"
+    },
+    "lensOptions": {
+      "colors": ["Clear", "Light Tint"],
+      "photochromic": true,
+      "polarized": false
+    },
+    "rating": 4.7,
+    "reviewCount": 56
+  },
+  {
+    "id": "4",
+    "sku": "VS-004-GRY",
+    "name": "Vikko Trail Insert",
+    "slug": "vikko-trail-insert",
+    "price": 189,
+    "description": "Performance sunglasses with optical insert dock for high-Rx athletes on trail and gravel.",
+    "features": ["Optical insert compatible", "Ventilated lens", "Adjustable temple tips"],
+    "images": [
+      { "url": "/images/products/vs-004-front.webp", "alt": "Trail Insert front view", "angle": "front" }
+    ],
+    "colors": [
+      { "id": "gry", "name": "Graphite", "hex": "#4a4a4a" },
+      { "id": "olv", "name": "Olive", "hex": "#556b2f" }
+    ],
+    "category": "sunglasses",
+    "gender": "unisex",
+    "fit": "medium",
+    "isNew": true,
+    "tags": ["trail-running", "gravel-cycling", "mountain-bike", "running"],
+    "inStock": true,
+    "published": true,
+    "imageSku": "vs-004",
+    "rxCompatible": true,
+    "rxType": "insert",
+    "specs": {
+      "lensMaterial": "Impact-rated polycarbonate",
+      "frameMaterial": "TR90 + TPU",
+      "weight": "31g",
+      "uvProtection": "UV400"
+    },
+    "lensOptions": {
+      "colors": ["Smoke", "Amber"],
+      "photochromic": true,
+      "polarized": false
+    },
+    "rating": 4.5,
+    "reviewCount": 38
+  },
+  {
+    "id": "5",
+    "sku": "VS-005-WHT",
+    "name": "Vikko Aero Clip",
+    "slug": "vikko-aero-clip",
+    "price": 129,
+    "description": "Lightweight road frames with magnetic clip-on sun shield for commute-to-ride athletes.",
+    "features": ["Magnetic clip-on shield", "Rx-ready base frame", "Anti-fog vents"],
+    "images": [
+      { "url": "/images/products/vs-005-front.webp", "alt": "Aero Clip front view", "angle": "front" }
+    ],
+    "colors": [
+      { "id": "wht", "name": "Arctic White", "hex": "#f5f5f5" },
+      { "id": "blk", "name": "Matte Black", "hex": "#1a1a1a" }
+    ],
+    "category": "eyeglasses",
+    "gender": "women",
+    "fit": "small",
+    "isNew": false,
+    "tags": ["road-cycling", "cycling", "running"],
+    "inStock": true,
+    "published": true,
+    "imageSku": "vs-005",
+    "rxCompatible": true,
+    "rxType": "clip-on",
+    "specs": {
+      "lensMaterial": "CR-39 / polycarbonate options",
+      "frameMaterial": "TR90",
+      "weight": "22g (+ clip)",
+      "uvProtection": "UV400 with clip-on"
+    },
+    "lensOptions": {
+      "colors": ["Clear", "Smoke Clip"],
+      "photochromic": false,
+      "polarized": true
+    },
+    "rating": 4.4,
+    "reviewCount": 27
+  }
+]

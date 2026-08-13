@@ -8,7 +8,17 @@ Complete these steps in order:
 
 1. **Create a Cloudflare API token** with **Cloudflare Images → Edit** permission for the Vikko account. Copy the token and account ID from the Cloudflare dashboard.
 
-2. **Set Worker secrets** (from this directory):
+2. **Create the PRODUCTS KV namespace** and bind it in `wrangler.toml`:
+
+   ```bash
+   cd workers/images-admin
+   npx wrangler kv namespace create PRODUCTS
+   # paste the printed id into wrangler.toml under [[kv_namespaces]] binding = "PRODUCTS"
+   ```
+
+   Deploy will fail until the placeholder `REPLACE_AFTER_wrangler_kv_namespace_create` is replaced with the real id.
+
+3. **Set Worker secrets** (from this directory):
 
    ```bash
    cd workers/images-admin
@@ -21,7 +31,7 @@ Complete these steps in order:
 
    Use a strong random value for `ADMIN_SESSION_SECRET` (e.g. `openssl rand -hex 32`).
 
-3. **Deploy the Worker:**
+4. **Deploy the Worker:**
 
    ```bash
    npm run deploy
@@ -29,13 +39,21 @@ Complete these steps in order:
 
    Note the deployed URL (e.g. `https://vikkosport-images-admin.<subdomain>.workers.dev`).
 
-4. **Point the frontend at the Worker** — set `VITE_API_BASE_URL` to the Worker URL (leave `VITE_CF_IMAGES_HASH` empty for now):
+5. **Seed the product catalog** (optional — `GET /api/catalog` also auto-seeds when KV is empty):
+
+   ```bash
+   # After login, POST with Bearer token:
+   # POST /api/admin/products/seed
+   # Body: {} or { "force": true } to overwrite
+   ```
+
+6. **Point the frontend at the Worker** — set `VITE_API_BASE_URL` to the Worker URL (leave `VITE_CF_IMAGES_HASH` empty for now):
    - **Local:** copy `.env.example` to `.env.development` and set `VITE_API_BASE_URL` (do not commit).
    - **CI:** add GitHub Actions repository secret `VITE_API_BASE_URL` (wired in `.github/workflows/deploy.yml` build step). Redeploy the frontend if needed so `/admin` can reach the Worker.
 
-5. **Upload catalog images** before enabling CDN URLs. Use `/admin` (login with `ADMIN_PASSWORD`) or the Cloudflare Images dashboard with custom IDs `vikko-{sku}-{angle}` (e.g. `vikko-vs-001-front`). Upload does **not** require `VITE_CF_IMAGES_HASH`. Cover every SKU/angle wired in the catalog (Velocity/Storm multi-angle + Apex/Trail/Aero `front`).
+7. **Upload catalog images** before enabling CDN URLs. Use `/admin` (login with `ADMIN_PASSWORD`) or the Cloudflare Images dashboard with custom IDs `vikko-{sku}-{angle}` (e.g. `vikko-vs-001-front`). Upload does **not** require `VITE_CF_IMAGES_HASH`. Cover every SKU/angle wired in the catalog (Velocity/Storm multi-angle + Apex/Trail/Aero `front`).
 
-6. **Set `VITE_CF_IMAGES_HASH`** only after the uploads above exist — extract the account hash from any Cloudflare Images delivery URL:
+8. **Set `VITE_CF_IMAGES_HASH`** only after the uploads above exist — extract the account hash from any Cloudflare Images delivery URL:
 
    ```
    https://imagedelivery.net/<ACCOUNT_HASH>/vikko-vs-001-front/public
@@ -46,11 +64,25 @@ Complete these steps in order:
 
    **Cutover warning:** A non-empty hash switches the catalog to `imagedelivery.net` for all wired SKU/angle URLs. There is no per-image existence check and no local `/images/products/*.webp` fallback once the hash is set. Missing custom IDs will 404 on the storefront.
 
-7. **Redeploy the frontend** so the hash (and API URL) take effect (`npm run build` locally or push to trigger CI).
+9. **Redeploy the frontend** so the hash (and API URL) take effect (`npm run build` locally or push to trigger CI).
 
-8. **Smoke test:**
+10. **Smoke test:**
+   - `GET /api/catalog` returns published products.
    - Confirm PDP/shop images load from `imagedelivery.net` for uploaded SKUs.
    - Re-upload via `/admin` if needed and verify the new asset appears (cache-bust / hard refresh).
+
+## Product catalog API
+
+| Method | Path | Auth | Notes |
+|--------|------|------|--------|
+| `GET` | `/api/catalog` | public | Published products only (`published !== false`); auto-seeds KV if empty |
+| `GET` | `/api/admin/products` | Bearer | All products |
+| `POST` | `/api/admin/products` | Bearer | Create (SKU unique) |
+| `GET` | `/api/admin/products/:id` | Bearer | One product |
+| `PUT` | `/api/admin/products/:id` | Bearer | Partial update; `sku` / `id` immutable |
+| `POST` | `/api/admin/products/seed` | Bearer | Seed if empty; `{ "force": true }` overwrites |
+
+KV layout: binding `PRODUCTS`, key `catalog` → `Product[]` JSON. Seed snapshot: `src/seed.json`.
 
 ## Local development
 

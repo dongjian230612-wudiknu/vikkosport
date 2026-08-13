@@ -1,8 +1,21 @@
+import {
+  createProduct,
+  ensureSeed,
+  publishedOnly,
+  readAll,
+  seedCatalog,
+  updateProduct,
+  writeAll,
+  type CreateProductBody,
+  type UpdateProductBody,
+} from './productsKv';
+
 export interface Env {
   CF_ACCOUNT_ID: string;
   CF_IMAGES_API_TOKEN: string;
   ADMIN_PASSWORD: string;
   ADMIN_SESSION_SECRET: string;
+  PRODUCTS: KVNamespace;
 }
 
 const ALLOWED_ORIGINS = new Set([
@@ -19,7 +32,7 @@ function corsHeaders(origin: string | null): HeadersInit {
   return {
     'Access-Control-Allow-Origin': allow,
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
   };
 }
 
@@ -52,6 +65,11 @@ async function verifyBearer(env: Env, header: string | null): Promise<boolean> {
   return sig === expected;
 }
 
+async function requireAuth(env: Env, request: Request, origin: string | null): Promise<Response | null> {
+  if (await verifyBearer(env, request.headers.get('Authorization'))) return null;
+  return json({ success: false, message: 'Unauthorized' }, 401, origin);
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const origin = request.headers.get('Origin');
@@ -82,6 +100,95 @@ export default {
       const exp = String(Date.now() + 12 * 60 * 60 * 1000);
       const sig = await hmacToken(env.ADMIN_SESSION_SECRET, exp);
       return json({ success: true, data: { token: `${exp}.${sig}` } }, 200, origin);
+    }
+
+    if (request.method === 'GET' && url.pathname === '/api/catalog') {
+      const all = await ensureSeed(env);
+      return json({ success: true, data: publishedOnly(all) }, 200, origin);
+    }
+
+    if (url.pathname === '/api/admin/products/seed') {
+      if (request.method !== 'POST') {
+        return json({ success: false, message: 'Method not allowed' }, 405, origin);
+      }
+      const unauthorized = await requireAuth(env, request, origin);
+      if (unauthorized) return unauthorized;
+      let force = false;
+      try {
+        const body = (await request.json()) as { force?: boolean };
+        force = body?.force === true;
+      } catch {
+        force = false;
+      }
+      const result = await seedCatalog(env, force);
+      return json(
+        {
+          success: true,
+          data: result.products,
+          message: result.message,
+          seeded: result.seeded,
+        },
+        200,
+        origin
+      );
+    }
+
+    if (url.pathname === '/api/admin/products') {
+      const unauthorized = await requireAuth(env, request, origin);
+      if (unauthorized) return unauthorized;
+
+      if (request.method === 'GET') {
+        const all = await ensureSeed(env);
+        return json({ success: true, data: all }, 200, origin);
+      }
+
+      if (request.method === 'POST') {
+        const body = (await request.json()) as CreateProductBody;
+        const all = await ensureSeed(env);
+        const created = createProduct(all, body);
+        if (!created.ok) {
+          return json({ success: false, message: created.message }, 400, origin);
+        }
+        all.push(created.product);
+        await writeAll(env, all);
+        return json({ success: true, data: created.product }, 201, origin);
+      }
+
+      return json({ success: false, message: 'Method not allowed' }, 405, origin);
+    }
+
+    const productMatch = url.pathname.match(/^\/api\/admin\/products\/([^/]+)$/);
+    if (productMatch) {
+      const unauthorized = await requireAuth(env, request, origin);
+      if (unauthorized) return unauthorized;
+      const id = decodeURIComponent(productMatch[1]);
+
+      if (request.method === 'GET') {
+        const all = await ensureSeed(env);
+        const product = all.find(p => p.id === id);
+        if (!product) {
+          return json({ success: false, message: 'Product not found' }, 404, origin);
+        }
+        return json({ success: true, data: product }, 200, origin);
+      }
+
+      if (request.method === 'PUT') {
+        const body = (await request.json()) as UpdateProductBody;
+        const all = await readAll(env);
+        const idx = all.findIndex(p => p.id === id);
+        if (idx === -1) {
+          return json({ success: false, message: 'Product not found' }, 404, origin);
+        }
+        const updated = updateProduct(all[idx], body);
+        if (!updated.ok) {
+          return json({ success: false, message: updated.message }, 400, origin);
+        }
+        all[idx] = updated.product;
+        await writeAll(env, all);
+        return json({ success: true, data: updated.product }, 200, origin);
+      }
+
+      return json({ success: false, message: 'Method not allowed' }, 405, origin);
     }
 
     if (request.method === 'POST' && url.pathname === '/api/admin/direct-upload') {
