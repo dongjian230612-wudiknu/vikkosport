@@ -1,8 +1,8 @@
 # Vikko Sport — Light Product Admin (Phase 1)
 
 **Date:** 2026-08-13  
-**Status:** Draft — awaiting user review  
-**Depends on:** Cloudflare Images admin Worker + `/admin` login (already shipped)
+**Status:** Approved  
+**SKU style:** `vs-00N` / `VS-00N` (normalize to `imageSku` e.g. `vs-006`)
 
 ## Goal
 
