@@ -61,7 +61,20 @@ export default {
 
     const url = new URL(request.url);
 
-    if (request.method === 'POST' && url.pathname === '/api/admin/login') {
+    if (url.pathname === '/api/admin/login') {
+      if (request.method === 'GET' || request.method === 'HEAD') {
+        return json(
+          {
+            success: false,
+            message: 'Use POST with JSON body { "password": "..." } — opening this URL in a browser sends GET and will 404.',
+          },
+          405,
+          origin
+        );
+      }
+      if (request.method !== 'POST') {
+        return json({ success: false, message: 'Method not allowed' }, 405, origin);
+      }
       const body = (await request.json()) as { password?: string };
       if (!body.password || body.password !== env.ADMIN_PASSWORD) {
         return json({ success: false, message: 'Invalid password' }, 401, origin);
