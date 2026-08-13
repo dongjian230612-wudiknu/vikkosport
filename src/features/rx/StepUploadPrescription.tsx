@@ -7,6 +7,78 @@ import { RxStickyBar } from './RxStickyBar';
 
 const PD_OPTIONS = ['58', '59', '60', '61', '62', '63', '64', '65', '66', '67', '68'];
 
+const fieldClass =
+  'w-full rounded-md border border-vikko-border bg-vikko-white px-3 py-2.5 text-center text-sm text-vikko-black outline-none focus:border-vikko-accent';
+
+function EyeCard({
+  title,
+  badge,
+  sphere,
+  cylinder,
+  axis,
+  onSphere,
+  onCylinder,
+  onAxis,
+}: {
+  title: string;
+  badge: string;
+  sphere: string;
+  cylinder: string;
+  axis: string;
+  onSphere: (v: string) => void;
+  onCylinder: (v: string) => void;
+  onAxis: (v: string) => void;
+}) {
+  return (
+    <div className="rounded-lg border border-vikko-border bg-vikko-white p-4 sm:p-5">
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <h3 className="font-semibold text-vikko-black">{title}</h3>
+        <span className="rounded bg-vikko-canvas px-2 py-0.5 text-xs font-medium text-vikko-muted">
+          {badge}
+        </span>
+      </div>
+      <div className="grid grid-cols-3 gap-3">
+        <label className="block space-y-1.5">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-vikko-muted">
+            SPH
+          </span>
+          <input
+            value={sphere}
+            onChange={e => onSphere(e.target.value)}
+            className={fieldClass}
+            placeholder="0.00"
+            inputMode="decimal"
+          />
+        </label>
+        <label className="block space-y-1.5">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-vikko-muted">
+            CYL
+          </span>
+          <input
+            value={cylinder}
+            onChange={e => onCylinder(e.target.value)}
+            className={fieldClass}
+            placeholder="0.00"
+            inputMode="decimal"
+          />
+        </label>
+        <label className="block space-y-1.5">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-vikko-muted">
+            AXIS
+          </span>
+          <input
+            value={axis}
+            onChange={e => onAxis(e.target.value)}
+            className={fieldClass}
+            placeholder="—"
+            inputMode="numeric"
+          />
+        </label>
+      </div>
+    </div>
+  );
+}
+
 export function StepUploadPrescription() {
   const { state, dispatch } = useRxWizard();
   const [draft, setDraft] = useState<RxPrescriptionDraft>(
@@ -42,7 +114,7 @@ export function StepUploadPrescription() {
       </p>
 
       <div className="space-y-4 max-w-3xl mx-auto">
-        <label className="flex items-center gap-3 rounded-lg border border-[#b8d4ea] px-4 py-4 cursor-pointer hover:border-vikko-accent">
+        <label className="flex items-center gap-3 rounded-lg border border-vikko-border px-4 py-4 cursor-pointer hover:border-vikko-accent bg-vikko-white">
           <Paperclip className="w-5 h-5 text-vikko-muted" />
           <span className="text-sm font-semibold text-vikko-accent underline">Choose File</span>
           <input
@@ -56,80 +128,99 @@ export function StepUploadPrescription() {
           )}
         </label>
 
-        <div className="rounded-lg border border-[#b8d4ea] px-4 py-4 space-y-3">
-          <div className="flex flex-wrap items-center gap-3">
-            <label className="text-sm font-semibold text-vikko-black">Pupillary Distance (PD)</label>
-            {!draft.dualPd ? (
-              <select
-                value={draft.pd}
-                onChange={e => update({ pd: e.target.value })}
-                className="rounded-md border border-vikko-border px-3 py-2 text-sm bg-vikko-white"
-              >
-                <option value="">Choose</option>
-                {PD_OPTIONS.map(v => (
-                  <option key={v} value={v}>{v}</option>
-                ))}
-              </select>
-            ) : (
-              <div className="flex gap-2">
-                <select
-                  value={draft.pdRight ?? ''}
-                  onChange={e => update({ pdRight: e.target.value, pd: e.target.value })}
-                  className="rounded-md border border-vikko-border px-3 py-2 text-sm"
-                >
-                  <option value="">Right</option>
-                  {PD_OPTIONS.map(v => <option key={v} value={v}>{v}</option>)}
-                </select>
-                <select
-                  value={draft.pdLeft ?? ''}
-                  onChange={e => update({ pdLeft: e.target.value })}
-                  className="rounded-md border border-vikko-border px-3 py-2 text-sm"
-                >
-                  <option value="">Left</option>
-                  {PD_OPTIONS.map(v => <option key={v} value={v}>{v}</option>)}
-                </select>
-              </div>
-            )}
-            <label className="flex items-center gap-2 text-sm text-vikko-ink cursor-pointer">
-              <input
-                type="checkbox"
-                checked={draft.dualPd}
-                onChange={e => update({ dualPd: e.target.checked })}
-              />
-              Have two PDs
-            </label>
-            <a href="/shipping" className="text-sm text-vikko-accent underline">Find your PD</a>
-          </div>
-          <p className="text-xs text-vikko-muted leading-relaxed">
-            Your PD is the distance between your pupils. We need this to center the optical zone of
-            your lenses. If you do not know your PD, ask your optometrist or measure at home.
+        <div className="pt-4">
+          <h3 className="font-display text-xl font-bold text-vikko-black mb-1">
+            Enter Your Prescription
+          </h3>
+          <p className="text-sm text-vikko-muted mb-5">
+            Use the same numbers as on your written prescription.
+            Enter the values from your prescription slip.{' '}
+            <a href="/shipping" className="text-vikko-accent underline font-medium">
+              How to measure PD
+            </a>
           </p>
+
+          <div className="space-y-4">
+            <EyeCard
+              title="Right eye"
+              badge="OD"
+              sphere={draft.sphereOd}
+              cylinder={draft.cylinderOd}
+              axis={draft.axisOd}
+              onSphere={v => update({ sphereOd: v })}
+              onCylinder={v => update({ cylinderOd: v })}
+              onAxis={v => update({ axisOd: v })}
+            />
+            <EyeCard
+              title="Left eye"
+              badge="OS"
+              sphere={draft.sphereOs}
+              cylinder={draft.cylinderOs}
+              axis={draft.axisOs}
+              onSphere={v => update({ sphereOs: v })}
+              onCylinder={v => update({ cylinderOs: v })}
+              onAxis={v => update({ axisOs: v })}
+            />
+
+            <div className="rounded-lg border border-vikko-border bg-vikko-white p-4 sm:p-5 space-y-3">
+              <h3 className="font-semibold text-vikko-black">Pupillary distance (PD)</h3>
+              <p className="text-sm text-vikko-muted">
+                One number for both eyes, unless your Rx lists two.
+              </p>
+              {!draft.dualPd ? (
+                <select
+                  value={draft.pd}
+                  onChange={e => update({ pd: e.target.value })}
+                  className={`${fieldClass} text-left`}
+                >
+                  <option value="">Select PD (mm)</option>
+                  {PD_OPTIONS.map(v => (
+                    <option key={v} value={v}>
+                      {v}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <div className="grid grid-cols-2 gap-3">
+                  <select
+                    value={draft.pdRight ?? ''}
+                    onChange={e => update({ pdRight: e.target.value, pd: e.target.value })}
+                    className={`${fieldClass} text-left`}
+                  >
+                    <option value="">Right PD</option>
+                    {PD_OPTIONS.map(v => (
+                      <option key={v} value={v}>
+                        {v}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={draft.pdLeft ?? ''}
+                    onChange={e => update({ pdLeft: e.target.value })}
+                    className={`${fieldClass} text-left`}
+                  >
+                    <option value="">Left PD</option>
+                    {PD_OPTIONS.map(v => (
+                      <option key={v} value={v}>
+                        {v}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+              <label className="flex items-center gap-2 text-sm text-vikko-ink cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={draft.dualPd}
+                  onChange={e => update({ dualPd: e.target.checked })}
+                />
+                I have two PD numbers
+              </label>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          {(
-            [
-              ['sphereOd', 'Sphere OD'],
-              ['sphereOs', 'Sphere OS'],
-              ['cylinderOd', 'Cylinder OD'],
-              ['cylinderOs', 'Cylinder OS'],
-              ['axisOd', 'Axis OD'],
-              ['axisOs', 'Axis OS'],
-            ] as const
-          ).map(([key, label]) => (
-            <label key={key} className="block text-sm rounded-lg border border-[#b8d4ea] px-3 py-2">
-              <span className="text-vikko-muted">{label}</span>
-              <input
-                value={draft[key]}
-                onChange={e => update({ [key]: e.target.value })}
-                className="mt-1 w-full bg-transparent outline-none text-vikko-black"
-                placeholder="-1.25"
-              />
-            </label>
-          ))}
-        </div>
-
-        <label className="flex items-start gap-3 rounded-lg border border-[#b8d4ea] px-4 py-4 cursor-pointer">
+        <label className="flex items-start gap-3 rounded-lg border border-vikko-border px-4 py-4 cursor-pointer bg-vikko-white">
           <input
             type="checkbox"
             className="mt-1"
@@ -137,11 +228,12 @@ export function StepUploadPrescription() {
             onChange={e => update({ ackRefund: e.target.checked })}
           />
           <span className="text-sm text-vikko-ink">
-            I acknowledge that prescription eyewear is non-refundable unless the prescription is filled incorrectly.
+            I acknowledge that prescription eyewear is non-refundable unless the prescription is
+            filled incorrectly.
           </span>
         </label>
 
-        <label className="flex items-start gap-3 rounded-lg border border-[#b8d4ea] px-4 py-4 cursor-pointer">
+        <label className="flex items-start gap-3 rounded-lg border border-vikko-border px-4 py-4 cursor-pointer bg-vikko-white">
           <input
             type="checkbox"
             className="mt-1"
@@ -149,9 +241,12 @@ export function StepUploadPrescription() {
             onChange={e => update({ ackPrivacy: e.target.checked })}
           />
           <span className="text-sm text-vikko-ink">
-            I acknowledge that by uploading my prescription information, Vikko Sport may process and
-            transmit my prescription in accordance with the{' '}
-            <a href="/contact" className="text-vikko-accent underline">privacy policy</a>.
+            I acknowledge that by uploading my prescription information, Vikko Sport may process
+            and transmit my prescription in accordance with the{' '}
+            <a href="/contact" className="text-vikko-accent underline">
+              privacy policy
+            </a>
+            .
           </span>
         </label>
 
