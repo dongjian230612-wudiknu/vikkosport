@@ -31,7 +31,7 @@ Complete these steps in order:
 
 4. **Point the frontend at the Worker** — set `VITE_API_BASE_URL` to the Worker URL:
    - **Local:** copy `.env.example` to `.env.development` and set the value (do not commit).
-   - **CI:** add `VITE_API_BASE_URL` to GitHub Actions secrets (see `.github/workflows/deploy.yml`).
+   - **CI:** add GitHub Actions repository secret `VITE_API_BASE_URL` (wired in `.github/workflows/deploy.yml` build step).
 
 5. **Set `VITE_CF_IMAGES_HASH`** — extract the account hash from any Cloudflare Images delivery URL:
 
@@ -39,7 +39,8 @@ Complete these steps in order:
    https://imagedelivery.net/<ACCOUNT_HASH>/vikko-vs-001-front/public
    ```
 
-   Add to `.env.development` locally and to GitHub Actions secrets for production builds.
+   - **Local:** add to `.env.development` (do not commit).
+   - **CI:** add GitHub Actions repository secret `VITE_CF_IMAGES_HASH` (same `deploy.yml` build step passes it into `npm run build`).
 
 6. **Redeploy the frontend** so the new env vars take effect (`npm run build` locally or push to trigger CI).
 
