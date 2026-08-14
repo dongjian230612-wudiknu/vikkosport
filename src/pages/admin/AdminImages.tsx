@@ -57,6 +57,8 @@ export function AdminImages() {
     return skus;
   }, [sku, skus]);
 
+  const customId = sku ? `vikko-${sku}-${angle}` : '';
+
   async function onUpload(e: FormEvent) {
     e.preventDefault();
     setError('');
@@ -98,7 +100,11 @@ export function AdminImages() {
       <div className="mb-6">
         <h2 className="font-display text-xl font-bold text-vikko-black">Image admin</h2>
         <p className="mt-2 text-sm text-vikko-muted">
-          Upload product gallery images (replace by SKU + angle).
+          Upload gallery angles for a product SKU. Cloudflare custom ID is{' '}
+          <code className="text-vikko-ink">vikko-&#123;sku&#125;-&#123;angle&#125;</code> (e.g.{' '}
+          <code className="text-vikko-ink">vikko-vs-001-front</code>). Local fallback files stay{' '}
+          <code className="text-vikko-ink">/images/products/vs-001-front.webp</code> — do not rename
+          them to the Cloudflare id.
         </p>
       </div>
 
@@ -134,6 +140,11 @@ export function AdminImages() {
               </option>
             ))}
           </select>
+          {customId ? (
+            <span className="block text-xs text-vikko-muted">
+              Will upload as <span className="font-semibold text-vikko-ink">{customId}</span>
+            </span>
+          ) : null}
         </label>
 
         <label className="block space-y-1.5">

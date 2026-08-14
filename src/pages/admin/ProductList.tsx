@@ -103,6 +103,16 @@ export function ProductList() {
         </Button>
       </div>
 
+      <ol className="rounded-lg border border-vikko-border bg-vikko-white px-4 py-3 text-sm text-vikko-muted space-y-1 list-decimal list-inside">
+        <li>Create or edit product (price, published, RX, stock).</li>
+        <li>
+          Open <span className="text-vikko-ink">Manage gallery images</span> and upload front / 45 /
+          side.
+        </li>
+        <li>Keep Published on — storefront catalog only shows published items.</li>
+        <li>Refresh the shop to see copy/price/image updates (no rebuild).</li>
+      </ol>
+
       {error && !modalOpen ? <p className="text-sm text-red-600">{error}</p> : null}
 
       <div className="overflow-x-auto rounded-lg border border-vikko-border bg-vikko-white">
@@ -116,6 +126,7 @@ export function ProductList() {
                 <th className="px-4 py-3 font-semibold">SKU</th>
                 <th className="px-4 py-3 font-semibold">Category</th>
                 <th className="px-4 py-3 font-semibold">Price</th>
+                <th className="px-4 py-3 font-semibold">Stock</th>
                 <th className="px-4 py-3 font-semibold">Status</th>
                 <th className="px-4 py-3 font-semibold"> </th>
               </tr>
@@ -123,7 +134,7 @@ export function ProductList() {
             <tbody>
               {products.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-vikko-muted">
+                  <td colSpan={7} className="px-4 py-8 text-vikko-muted">
                     No products yet.
                   </td>
                 </tr>
@@ -136,6 +147,9 @@ export function ProductList() {
                       <td className="px-4 py-3 text-vikko-ink">{p.sku}</td>
                       <td className="px-4 py-3 capitalize text-vikko-ink">{p.category}</td>
                       <td className="px-4 py-3 text-vikko-ink">{formatPrice(p.price)}</td>
+                      <td className="px-4 py-3 tabular-nums text-vikko-ink">
+                        {p.stock ?? (p.inStock ? '—' : 0)}
+                      </td>
                       <td className="px-4 py-3">
                         <span
                           className={

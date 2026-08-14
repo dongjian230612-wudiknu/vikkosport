@@ -32,6 +32,7 @@ export function ProductEdit() {
   const [sku, setSku] = useState('');
   const [imageSku, setImageSku] = useState('');
   const [productId, setProductId] = useState('');
+  const [stock, setStock] = useState('0');
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -58,6 +59,7 @@ export function ProductEdit() {
         setRxCompatible(p.rxCompatible);
         setRxType(resolvedRxType(p.rxCompatible, p.rxType));
         setImageSku(p.imageSku || normalizeImageSku(p.sku));
+        setStock(String(p.stock ?? (p.inStock ? 1 : 0)));
       })
       .catch((err) => {
         if (!cancelled) {
@@ -77,12 +79,17 @@ export function ProductEdit() {
     setError('');
     setSaved(false);
     const parsedPrice = Number(price);
+    const parsedStock = Number(stock);
     if (!name.trim() || !slug.trim()) {
       setError('Name and slug are required.');
       return;
     }
     if (!Number.isFinite(parsedPrice) || parsedPrice < 0) {
       setError('Enter a valid price.');
+      return;
+    }
+    if (!Number.isFinite(parsedStock) || parsedStock < 0) {
+      setError('Enter a valid stock quantity.');
       return;
     }
 
@@ -97,6 +104,7 @@ export function ProductEdit() {
         published,
         rxCompatible,
         rxType: resolvedRxType(rxCompatible, rxType),
+        stock: parsedStock,
       });
       setName(next.name);
       setSlug(next.slug);
@@ -106,6 +114,7 @@ export function ProductEdit() {
       setPublished(next.published !== false);
       setRxCompatible(next.rxCompatible);
       setRxType(resolvedRxType(next.rxCompatible, next.rxType));
+      setStock(String(next.stock ?? (next.inStock ? 1 : 0)));
       setSaved(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Save failed');
@@ -217,6 +226,19 @@ export function ProductEdit() {
               className={fieldClass}
               required
             />
+          </label>
+          <label className="block space-y-1.5">
+            <span className="text-sm font-semibold text-vikko-black">Stock</span>
+            <input
+              type="number"
+              min="0"
+              step="1"
+              value={stock}
+              onChange={(e) => setStock(e.target.value)}
+              className={fieldClass}
+              required
+            />
+            <span className="text-xs text-vikko-muted">0 = out of stock on the storefront.</span>
           </label>
           <label className="block space-y-1.5">
             <span className="text-sm font-semibold text-vikko-black">Category</span>
