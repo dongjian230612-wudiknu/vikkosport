@@ -28,7 +28,6 @@ function rxReducer(state: RxWizardState, action: RxWizardAction): RxWizardState 
         lensTint: null,
         coating: 'none',
         prescription: null,
-        addedToCart: false,
       };
     case 'SET_PRESCRIPTION_TYPE':
       return { ...state, prescriptionType: action.prescriptionType, step: 2 };
@@ -40,8 +39,6 @@ function rxReducer(state: RxWizardState, action: RxWizardAction): RxWizardState 
       return { ...state, coating: action.coating, step: 5 };
     case 'SET_PRESCRIPTION':
       return { ...state, prescription: action.prescription, step: 6 };
-    case 'MARK_ADDED':
-      return { ...state, addedToCart: true };
     case 'RESET':
       return initialRxState;
     default:

@@ -132,7 +132,6 @@ export interface RxWizardState {
   lensTint: LensTintId | null;
   coating: LensCoatingId;
   prescription: RxPrescriptionDraft | null;
-  addedToCart: boolean;
 }
 
 export type RxWizardAction =
@@ -143,7 +142,6 @@ export type RxWizardAction =
   | { type: 'SET_LENS_TINT'; lensTint: LensTintId }
   | { type: 'SET_COATING'; coating: LensCoatingId }
   | { type: 'SET_PRESCRIPTION'; prescription: RxPrescriptionDraft }
-  | { type: 'MARK_ADDED' }
   | { type: 'RESET' };
 
 export const initialRxPrescription: RxPrescriptionDraft = {
@@ -169,7 +167,6 @@ export const initialRxState: RxWizardState = {
   lensTint: null,
   coating: 'none',
   prescription: null,
-  addedToCart: false,
 };
 
 export const LENS_STEPS: { step: LensStep; label: string }[] = [
