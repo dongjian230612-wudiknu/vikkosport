@@ -1,0 +1,15 @@
+---
+description: After finishing a task, end with 1–3 next-step suggestions including one recommended
+alwaysApply: true
+---
+
+# Post-task suggestions
+
+When a discrete coding task is finished (feature shipped, bug fixed, commit/push done, or a clear Q&A answer that closes the request):
+
+1. End the reply with **1–3 short suggestions** for what to do next.
+2. Mark **exactly one** as the recommended choice (e.g. prefix with `推荐：` or bold **Recommended**).
+3. Keep each suggestion to one line; tie them to the current product state, not generic advice.
+4. Do not block on asking which to pick unless the next step needs a real product decision (e.g. real vs demo payment).
+
+Skip this block only for tiny mid-task replies (clarifying questions, “still working”, tool-only turns).
