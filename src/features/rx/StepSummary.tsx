@@ -1,4 +1,3 @@
-import { Link } from 'wouter';
 import { Button } from '../../components/ui/Button';
 import { formatPrice } from '../../lib/utils';
 import { useCart } from '../../hooks/useCart';
@@ -90,12 +89,13 @@ export function StepSummary() {
             Added to cart. Online checkout is coming soon — contact us to complete payment.
           </div>
         )}
-        <Button variant="outline" size="lg" onClick={() => dispatch({ type: 'RESET' })}>
-          Start over
+        <Button
+          variant="outline"
+          size="lg"
+          onClick={() => dispatch({ type: 'SET_STEP', step: 5 })}
+        >
+          Back
         </Button>
-        <Link href="/shop?type=sunglasses&rx=1">
-          <Button variant="ghost" size="lg">Back to RX sunglasses</Button>
-        </Link>
       </div>
     </div>
   );
