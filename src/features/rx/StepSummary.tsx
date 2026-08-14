@@ -1,3 +1,4 @@
+import { Link } from 'wouter';
 import { Button } from '../../components/ui/Button';
 import { formatPrice } from '../../lib/utils';
 import { useCart } from '../../hooks/useCart';
@@ -64,18 +65,40 @@ export function StepSummary() {
           </div>
           <div className="p-6 space-y-3 text-sm">
             <p className="font-display text-lg font-bold text-vikko-black">{frame.name}</p>
-            <p><span className="text-vikko-muted">Prescription:</span> {typeLabel}</p>
-            <p><span className="text-vikko-muted">Lens group:</span> {groupLabel}</p>
-            <p><span className="text-vikko-muted">Lenses:</span> {tintLabel}</p>
-            <p><span className="text-vikko-muted">Coating:</span> {coatingLabel}</p>
-            <p><span className="text-vikko-muted">PD:</span> {prescription.pd || `${prescription.pdRight}/${prescription.pdLeft}`}</p>
+            <p>
+              <span className="text-vikko-muted">Prescription:</span> {typeLabel}
+            </p>
+            <p>
+              <span className="text-vikko-muted">Lens group:</span> {groupLabel}
+            </p>
+            <p>
+              <span className="text-vikko-muted">Lenses:</span> {tintLabel}
+            </p>
+            <p>
+              <span className="text-vikko-muted">Coating:</span> {coatingLabel}
+            </p>
+            <p>
+              <span className="text-vikko-muted">PD:</span>{' '}
+              {prescription.pd || `${prescription.pdRight}/${prescription.pdLeft}`}
+            </p>
             {prescription.uploadName && (
-              <p><span className="text-vikko-muted">Rx file:</span> {prescription.uploadName}</p>
+              <p>
+                <span className="text-vikko-muted">Rx file:</span> {prescription.uploadName}
+              </p>
             )}
             <div className="border-t border-vikko-border pt-3 space-y-1">
-              <div className="flex justify-between"><span className="text-vikko-muted">Frame</span><span>{formatPrice(frame.price)}</span></div>
-              <div className="flex justify-between"><span className="text-vikko-muted">Lenses & options</span><span>{formatPrice(lensUpcharge)}</span></div>
-              <div className="flex justify-between font-bold text-base pt-1"><span>Total</span><span>{formatPrice(total)}</span></div>
+              <div className="flex justify-between">
+                <span className="text-vikko-muted">Frame</span>
+                <span>{formatPrice(frame.price)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-vikko-muted">Lenses & options</span>
+                <span>{formatPrice(lensUpcharge)}</span>
+              </div>
+              <div className="flex justify-between font-bold text-base pt-1">
+                <span>Total</span>
+                <span>{formatPrice(total)}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -83,17 +106,15 @@ export function StepSummary() {
 
       <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
         {!state.addedToCart ? (
-          <Button size="lg" onClick={addRxToCart}>Add to cart</Button>
+          <Button size="lg" onClick={addRxToCart}>
+            Add to cart
+          </Button>
         ) : (
-          <div className="rounded-lg border border-vikko-border bg-vikko-canvas px-4 py-3 text-sm">
-            Added to cart. Online checkout is coming soon — contact us to complete payment.
-          </div>
+          <Link href="/cart">
+            <Button size="lg">View cart</Button>
+          </Link>
         )}
-        <Button
-          variant="outline"
-          size="lg"
-          onClick={() => dispatch({ type: 'SET_STEP', step: 5 })}
-        >
+        <Button variant="outline" size="lg" onClick={() => dispatch({ type: 'SET_STEP', step: 5 })}>
           Back
         </Button>
       </div>

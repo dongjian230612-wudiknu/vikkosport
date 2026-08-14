@@ -5,6 +5,9 @@ import { Home } from './pages/Home';
 import { Shop } from './pages/Shop';
 import { ProductDetail } from './pages/ProductDetail';
 import { RxSports } from './pages/RxSports';
+import { Cart } from './pages/Cart';
+import { Checkout } from './pages/Checkout';
+import { CheckoutSuccess } from './pages/CheckoutSuccess';
 import { AdminShell } from './pages/admin/AdminShell';
 import { ProductList } from './pages/admin/ProductList';
 import { ProductEdit } from './pages/admin/ProductEdit';
@@ -24,6 +27,9 @@ function AppShell() {
           <Route path="/shop" component={Shop} />
           <Route path="/product/:slug" component={ProductDetail} />
           <Route path="/rx-sports" component={RxSports} />
+          <Route path="/cart" component={Cart} />
+          <Route path="/checkout/success" component={CheckoutSuccess} />
+          <Route path="/checkout" component={Checkout} />
           <Route path="/admin/products/:id">
             <AdminShell>
               <ProductEdit />

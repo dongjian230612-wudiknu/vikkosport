@@ -71,6 +71,7 @@ export interface CartRxExtras {
 }
 
 export interface CartItem {
+  id: string;
   product: Product;
   colorId: string;
   quantity: number;
