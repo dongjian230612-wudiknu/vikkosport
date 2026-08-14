@@ -1,4 +1,4 @@
-import { Link } from 'wouter';
+import { useLocation } from 'wouter';
 import { Button } from '../../components/ui/Button';
 import { formatPrice } from '../../lib/utils';
 import { useCart } from '../../hooks/useCart';
@@ -16,6 +16,7 @@ import {
 export function StepSummary() {
   const { state, dispatch } = useRxWizard();
   const { addItem } = useCart();
+  const [, setLocation] = useLocation();
 
   const frame = state.selectedFrame;
   const prescription = state.prescription;
@@ -49,7 +50,7 @@ export function StepSummary() {
       polarized: state.lensGroup === 'polarized',
       uploadName: prescription.uploadName,
     });
-    dispatch({ type: 'MARK_ADDED' });
+    setLocation('/cart');
   };
 
   return (
@@ -105,15 +106,9 @@ export function StepSummary() {
       </div>
 
       <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-        {!state.addedToCart ? (
-          <Button size="lg" onClick={addRxToCart}>
-            Add to cart
-          </Button>
-        ) : (
-          <Link href="/cart">
-            <Button size="lg">View cart</Button>
-          </Link>
-        )}
+        <Button size="lg" onClick={addRxToCart}>
+          Add to cart
+        </Button>
         <Button variant="outline" size="lg" onClick={() => dispatch({ type: 'SET_STEP', step: 5 })}>
           Back
         </Button>
