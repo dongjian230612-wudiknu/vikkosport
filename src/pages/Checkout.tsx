@@ -90,12 +90,13 @@ export function Checkout() {
   const [error, setError] = useState<string | null>(null);
   const [shipping] = useState(0);
   const [paying, setPaying] = useState(false);
+  const [orderPlaced, setOrderPlaced] = useState(false);
 
   useEffect(() => {
-    if (items.length === 0) {
+    if (items.length === 0 && !orderPlaced) {
       setLocation('/cart');
     }
-  }, [items.length, setLocation]);
+  }, [items.length, setLocation, orderPlaced]);
 
   const shipLabel = useMemo(() => formatShipTo(address), [address]);
 
@@ -128,6 +129,7 @@ export function Checkout() {
     } catch {
       /* ignore quota */
     }
+    setOrderPlaced(true);
     window.setTimeout(() => {
       clearCart();
       setPaying(false);
