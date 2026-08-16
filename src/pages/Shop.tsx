@@ -16,6 +16,15 @@ function titleFromParams(params: URLSearchParams): { title: string; subtitle: st
   const fit = params.get('fit');
   const rx = params.get('rx');
   const isNew = params.get('new');
+  const bestsellers = params.get('bestsellers');
+
+  if (bestsellers === '1') {
+    return { title: 'Best Sellers', subtitle: 'Customer favorites and top-rated frames.' };
+  }
+
+  if (isNew === '1' && !type) {
+    return { title: 'New Arrivals', subtitle: 'Latest arrivals in performance eyewear.' };
+  }
 
   if (type === 'sunglasses') {
     if (rx === '1') return { title: 'Prescription Sunglasses', subtitle: 'Rx-ready performance sunglasses.' };
@@ -65,6 +74,7 @@ export function Shop() {
   const fit = params.get('fit');
   const rx = params.get('rx');
   const isNew = params.get('new');
+  const bestsellers = params.get('bestsellers');
 
   if (loading) {
     return (
@@ -98,6 +108,12 @@ export function Shop() {
 
     if (isNew === '1') {
       list = list.filter(p => p.isNew);
+    }
+
+    if (bestsellers === '1') {
+      list = [...list]
+        .filter(p => p.reviewCount > 0 || p.rating >= 4)
+        .sort((a, b) => b.reviewCount - a.reviewCount || b.rating - a.rating);
     }
 
     if (sport && sport !== 'all') {

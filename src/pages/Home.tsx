@@ -9,8 +9,8 @@ import heroSports from '../assets/hero-sports.jpg';
 const categories = [
   { label: "Men's Sunglasses", href: '/shop?type=sunglasses&gender=men', image: '/images/categories/mens-sunglasses.jpg' },
   { label: "Women's Sunglasses", href: '/shop?type=sunglasses&gender=women', image: '/images/categories/womens-sunglasses.jpg' },
-  { label: 'Eyeglasses', href: '/shop?type=eyeglasses', image: '/images/categories/eyeglasses.jpg' },
-  { label: 'Prescription', href: '/shop?type=sunglasses&rx=1', image: '/images/categories/rx.jpg' },
+  { label: 'Best Sellers', href: '/shop?bestsellers=1', image: '/images/categories/bestsellers.jpg' },
+  { label: 'New Arrivals', href: '/shop?new=1', image: '/images/categories/new-arrivals.jpg' },
 ];
 
 const sports = [
