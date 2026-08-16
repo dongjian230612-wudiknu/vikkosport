@@ -7,12 +7,14 @@ import { useCatalog } from '../lib/catalog';
 import heroSports from '../assets/hero-sports.jpg';
 import mensSunglasses from '../assets/categories/mens-sunglasses.jpg';
 import womensSunglasses from '../assets/categories/womens-sunglasses.jpg';
+import bestsellers from '../assets/categories/bestsellers.jpg';
+import newArrivals from '../assets/categories/new-arrivals.jpg';
 
 const categories = [
   { label: "Men's Sunglasses", href: '/shop?type=sunglasses&gender=men', image: mensSunglasses },
   { label: "Women's Sunglasses", href: '/shop?type=sunglasses&gender=women', image: womensSunglasses },
-  { label: 'Best Sellers', href: '/shop?bestsellers=1', image: '' },
-  { label: 'New Arrivals', href: '/shop?new=1', image: '' },
+  { label: 'Best Sellers', href: '/shop?bestsellers=1', image: bestsellers },
+  { label: 'New Arrivals', href: '/shop?new=1', image: newArrivals },
 ];
 
 const sports = [
