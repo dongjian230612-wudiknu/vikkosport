@@ -11,6 +11,7 @@ import bestsellers from '../assets/categories/bestsellers.jpg';
 import newArrivals from '../assets/categories/new-arrivals.jpg';
 import cyclingSport from '../assets/sports/cycling.jpg';
 import runningSport from '../assets/sports/running.jpg';
+import rxPrograms from '../assets/banners/rx-programs.jpg';
 
 const categories = [
   { label: "Men's Sunglasses", href: '/shop?type=sunglasses&gender=men', image: mensSunglasses },
@@ -149,6 +150,32 @@ export function Home() {
         </div>
       </section>
 
+      {/* RX Programs banner */}
+      <section className="relative min-h-[420px] md:min-h-[520px] overflow-hidden bg-vikko-black">
+        <img
+          src={rxPrograms}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover object-[center_20%]"
+        />
+        <div className="absolute inset-0 bg-vikko-black/45" />
+        <div className="relative z-10 mx-auto flex min-h-[420px] md:min-h-[520px] max-w-7xl items-end px-4 sm:px-6 lg:px-8 pb-12 md:pb-16">
+          <div className="max-w-lg">
+            <h2 className="font-display text-4xl md:text-5xl font-bold uppercase tracking-wide text-vikko-white">
+              RX Programs
+            </h2>
+            <p className="mt-3 text-base md:text-lg text-white/85">
+              All optical solutions tailored to your needs
+            </p>
+            <Link href="/shop?type=sunglasses&rx=1" className="mt-6 inline-block">
+              <span className="inline-flex items-center gap-2 rounded-md bg-vikko-white px-5 py-3 text-sm font-bold uppercase tracking-wide text-vikko-black hover:bg-vikko-canvas cursor-pointer">
+                Discover Performance Sunglasses
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Featured products */}
       <section className="bg-vikko-white py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -170,23 +197,6 @@ export function Home() {
               ))}
             </div>
           )}
-        </div>
-      </section>
-
-      {/* Rx band */}
-      <section className="bg-vikko-black text-vikko-white py-16 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
-          <div className="max-w-xl">
-            <h2 className="font-display text-2xl md:text-3xl font-bold mb-3">Need prescription lenses?</h2>
-            <p className="text-white/70 text-sm md:text-base">
-              Add single vision, progressive, or bifocal lenses to performance frames — Rx starts under Prescription Sunglasses.
-            </p>
-          </div>
-          <Link href="/shop?type=sunglasses&rx=1">
-            <Button size="lg" className="bg-vikko-white text-vikko-black hover:bg-vikko-canvas gap-2">
-              Shop Prescription <ArrowRight className="w-4 h-4" />
-            </Button>
-          </Link>
         </div>
       </section>
 
