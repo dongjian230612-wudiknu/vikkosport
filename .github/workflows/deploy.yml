@@ -56,4 +56,6 @@ jobs:
             # Fail deploy if hero asset missing (avoids SPA HTML being cached as the image)
             test -f /home/ubuntu/vikkosport/dist/images/hero-sports.jpg
             curl -sfI http://127.0.0.1:3001/images/hero-sports.jpg | grep -qi 'content-type: image/'
+            # Category tiles are Vite-hashed under /assets; ensure at least one jpg asset exists
+            ls /home/ubuntu/vikkosport/dist/assets/*.jpg >/dev/null
             echo "vikkosport healthy on :3001"

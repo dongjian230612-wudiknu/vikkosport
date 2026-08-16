@@ -5,19 +5,21 @@ import { ProductCard } from '../components/product/ProductCard';
 import { getFeaturedProducts } from '../data/products';
 import { useCatalog } from '../lib/catalog';
 import heroSports from '../assets/hero-sports.jpg';
+import mensSunglasses from '../assets/categories/mens-sunglasses.jpg';
+import womensSunglasses from '../assets/categories/womens-sunglasses.jpg';
 
 const categories = [
-  { label: "Men's Sunglasses", href: '/shop?type=sunglasses&gender=men', image: '/images/categories/mens-sunglasses.jpg' },
-  { label: "Women's Sunglasses", href: '/shop?type=sunglasses&gender=women', image: '/images/categories/womens-sunglasses.jpg' },
-  { label: 'Best Sellers', href: '/shop?bestsellers=1', image: '/images/categories/bestsellers.jpg' },
-  { label: 'New Arrivals', href: '/shop?new=1', image: '/images/categories/new-arrivals.jpg' },
+  { label: "Men's Sunglasses", href: '/shop?type=sunglasses&gender=men', image: mensSunglasses },
+  { label: "Women's Sunglasses", href: '/shop?type=sunglasses&gender=women', image: womensSunglasses },
+  { label: 'Best Sellers', href: '/shop?bestsellers=1', image: '' },
+  { label: 'New Arrivals', href: '/shop?new=1', image: '' },
 ];
 
 const sports = [
-  { label: 'Cycling', href: '/shop?type=sunglasses&sport=cycling', image: '/images/sports/cycling.jpg' },
-  { label: 'Running', href: '/shop?type=sunglasses&sport=running', image: '/images/sports/running.jpg' },
-  { label: 'Mountain Bike', href: '/shop?sport=mountain-bike', image: '/images/sports/mountain-bike.jpg' },
-  { label: 'Trail Running', href: '/shop?sport=trail-running', image: '/images/sports/trail-running.jpg' },
+  { label: 'Cycling', href: '/shop?type=sunglasses&sport=cycling', image: '' },
+  { label: 'Running', href: '/shop?type=sunglasses&sport=running', image: '' },
+  { label: 'Mountain Bike', href: '/shop?sport=mountain-bike', image: '' },
+  { label: 'Trail Running', href: '/shop?sport=trail-running', image: '' },
 ];
 
 export function Home() {
@@ -73,10 +75,12 @@ export function Home() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             {categories.map(cat => (
               <Link key={cat.href} href={cat.href} className="group relative aspect-[3/4] overflow-hidden rounded-lg bg-vikko-canvas cursor-pointer">
-                <div
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                  style={{ backgroundImage: `url('${cat.image}')` }}
-                />
+                {cat.image ? (
+                  <div
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                    style={{ backgroundImage: `url('${cat.image}')` }}
+                  />
+                ) : null}
                 <div className="absolute inset-0 bg-vikko-black/25 group-hover:bg-vikko-black/15 transition-colors" />
                 <div className="absolute inset-x-0 bottom-0 p-4">
                   <span className="font-display text-sm md:text-base font-semibold text-vikko-white">
@@ -101,10 +105,12 @@ export function Home() {
                 href={sport.href}
                 className="group relative aspect-[4/3] overflow-hidden rounded-lg bg-vikko-white border border-vikko-border cursor-pointer"
               >
-                <div
-                  className="absolute inset-0 bg-cover bg-center opacity-80 transition-transform duration-500 group-hover:scale-105"
-                  style={{ backgroundImage: `url('${sport.image}')` }}
-                />
+                {sport.image ? (
+                  <div
+                    className="absolute inset-0 bg-cover bg-center opacity-80 transition-transform duration-500 group-hover:scale-105"
+                    style={{ backgroundImage: `url('${sport.image}')` }}
+                  />
+                ) : null}
                 <div className="absolute inset-0 bg-vikko-black/20" />
                 <div className="absolute inset-0 flex items-end p-4">
                   <span className="font-display text-sm font-semibold text-vikko-white uppercase tracking-wide">
