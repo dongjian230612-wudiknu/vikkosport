@@ -12,6 +12,9 @@ import newArrivals from '../assets/categories/new-arrivals.jpg';
 import cyclingSport from '../assets/sports/cycling.jpg';
 import runningSport from '../assets/sports/running.jpg';
 import rxPrograms from '../assets/banners/rx-programs.jpg';
+import lensPhotochromic from '../assets/lenses/photochromic.jpg';
+import lensMirrored from '../assets/lenses/mirrored.jpg';
+import lensPolarized from '../assets/lenses/polarized.jpg';
 
 const categories = [
   { label: "Men's Sunglasses", href: '/shop?type=sunglasses&gender=men', image: mensSunglasses },
@@ -34,6 +37,24 @@ const sports = [
     cta: 'Shop running',
     href: '/shop?type=sunglasses&sport=running',
     image: runningSport,
+  },
+];
+
+const lensTechs = [
+  {
+    label: 'Photochromic',
+    href: '/shop?type=sunglasses&lens=photochromic',
+    image: lensPhotochromic,
+  },
+  {
+    label: 'Mirrored',
+    href: '/shop?type=sunglasses&lens=mirrored',
+    image: lensMirrored,
+  },
+  {
+    label: 'Polarized',
+    href: '/shop?type=sunglasses&lens=polarized',
+    image: lensPolarized,
   },
 ];
 
@@ -183,6 +204,42 @@ export function Home() {
               Discover Performance Sunglasses
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Choose your lens technology */}
+      <section className="bg-vikko-white py-16 md:py-24" aria-labelledby="lens-tech-heading">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2
+            id="lens-tech-heading"
+            className="font-display text-2xl md:text-3xl font-bold uppercase tracking-wide text-vikko-black mb-10 md:mb-14"
+          >
+            Choose Your Lens Technology
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-10">
+            {lensTechs.map(lens => (
+              <div key={lens.label} className="flex flex-col items-center text-center">
+                <Link
+                  href={lens.href}
+                  className="group relative w-full aspect-[3/4] overflow-hidden rounded-lg bg-vikko-canvas cursor-pointer"
+                >
+                  <img
+                    src={lens.image}
+                    alt={`${lens.label} lens technology`}
+                    className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  />
+                </Link>
+                <h3 className="mt-5 font-display text-base md:text-lg font-bold uppercase tracking-wide text-vikko-black">
+                  {lens.label}
+                </h3>
+                <Link href={lens.href} className="mt-3 inline-block">
+                  <span className="inline-flex min-h-10 cursor-pointer items-center justify-center rounded-md bg-vikko-black px-4 py-2 text-xs font-bold uppercase tracking-wide text-vikko-white transition-colors duration-200 hover:bg-vikko-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-vikko-black/40 focus-visible:ring-offset-2">
+                    View Products
+                  </span>
+                </Link>
+              </div>
+            ))}
           </div>
         </div>
       </section>

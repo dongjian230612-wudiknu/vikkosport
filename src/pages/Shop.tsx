@@ -17,9 +17,20 @@ function titleFromParams(params: URLSearchParams): { title: string; subtitle: st
   const rx = params.get('rx');
   const isNew = params.get('new');
   const bestsellers = params.get('bestsellers');
+  const lens = params.get('lens');
 
   if (bestsellers === '1') {
     return { title: 'Best Sellers', subtitle: 'Customer favorites and top-rated frames.' };
+  }
+
+  if (lens === 'photochromic') {
+    return { title: 'Photochromic', subtitle: 'Lenses that adapt to changing light.' };
+  }
+  if (lens === 'mirrored') {
+    return { title: 'Mirrored', subtitle: 'High-glare control with mirror coatings.' };
+  }
+  if (lens === 'polarized') {
+    return { title: 'Polarized', subtitle: 'Cut glare for sharper outdoor vision.' };
   }
 
   if (isNew === '1' && !type) {
@@ -75,6 +86,7 @@ export function Shop() {
   const rx = params.get('rx');
   const isNew = params.get('new');
   const bestsellers = params.get('bestsellers');
+  const lens = params.get('lens');
 
   if (loading) {
     return (
@@ -114,6 +126,16 @@ export function Shop() {
       list = [...list]
         .filter(p => p.reviewCount > 0 || p.rating >= 4)
         .sort((a, b) => b.reviewCount - a.reviewCount || b.rating - a.rating);
+    }
+
+    if (lens === 'photochromic') {
+      list = list.filter(p => p.lensOptions?.photochromic);
+    } else if (lens === 'polarized') {
+      list = list.filter(p => p.lensOptions?.polarized);
+    } else if (lens === 'mirrored') {
+      list = list.filter(p =>
+        (p.lensOptions?.colors ?? []).some(c => /mirror|revo/i.test(c))
+      );
     }
 
     if (sport && sport !== 'all') {
