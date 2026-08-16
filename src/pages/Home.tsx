@@ -150,27 +150,38 @@ export function Home() {
         </div>
       </section>
 
-      {/* RX Programs banner */}
-      <section className="relative min-h-[420px] md:min-h-[520px] overflow-hidden bg-vikko-black">
+      {/* RX Programs banner — tall media plane, single CTA (ui-ux-pro-max) */}
+      <section
+        className="relative min-h-[560px] md:min-h-[680px] lg:min-h-[720px] overflow-hidden bg-vikko-black"
+        aria-labelledby="rx-programs-heading"
+      >
         <img
           src={rxPrograms}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover object-[center_20%]"
+          alt="Athlete wearing Vikko performance sunglasses"
+          className="absolute inset-0 h-full w-full object-cover object-[center_25%]"
         />
-        <div className="absolute inset-0 bg-vikko-black/45" />
-        <div className="relative z-10 mx-auto flex min-h-[420px] md:min-h-[520px] max-w-7xl items-end px-4 sm:px-6 lg:px-8 pb-12 md:pb-16">
-          <div className="max-w-lg">
-            <h2 className="font-display text-4xl md:text-5xl font-bold uppercase tracking-wide text-vikko-white">
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-vikko-black/75 via-vikko-black/45 to-vikko-black/20"
+          aria-hidden
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-vikko-black/55 via-transparent to-vikko-black/20" aria-hidden />
+        <div className="relative z-10 mx-auto flex min-h-[560px] md:min-h-[680px] lg:min-h-[720px] max-w-7xl items-end px-4 sm:px-6 lg:px-8 py-16 md:py-20 lg:py-24">
+          <div className="max-w-xl space-y-5 md:space-y-6">
+            <h2
+              id="rx-programs-heading"
+              className="font-display text-4xl sm:text-5xl md:text-6xl font-bold uppercase tracking-[0.04em] text-vikko-white leading-[1.05]"
+            >
               RX Programs
             </h2>
-            <p className="mt-3 text-base md:text-lg text-white/85">
+            <p className="max-w-md text-base md:text-lg text-white/90 leading-relaxed">
               All optical solutions tailored to your needs
             </p>
-            <Link href="/shop?type=sunglasses&rx=1" className="mt-6 inline-block">
-              <span className="inline-flex items-center gap-2 rounded-md bg-vikko-white px-5 py-3 text-sm font-bold uppercase tracking-wide text-vikko-black hover:bg-vikko-canvas cursor-pointer">
-                Discover Performance Sunglasses
-                <ArrowRight className="h-4 w-4" aria-hidden />
-              </span>
+            <Link
+              href="/shop?type=sunglasses&rx=1"
+              className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-md bg-vikko-white px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-vikko-black transition-colors duration-200 hover:bg-vikko-canvas focus:outline-none focus-visible:ring-2 focus-visible:ring-vikko-white focus-visible:ring-offset-2 focus-visible:ring-offset-vikko-black"
+            >
+              Discover Performance Sunglasses
+              <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
           </div>
         </div>
