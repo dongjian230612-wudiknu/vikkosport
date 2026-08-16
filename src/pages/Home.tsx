@@ -16,10 +16,20 @@ const categories = [
 ];
 
 const sports = [
-  { label: 'Cycling', href: '/shop?type=sunglasses&sport=cycling', image: '' },
-  { label: 'Running', href: '/shop?type=sunglasses&sport=running', image: '' },
-  { label: 'Mountain Bike', href: '/shop?sport=mountain-bike', image: '' },
-  { label: 'Trail Running', href: '/shop?sport=trail-running', image: '' },
+  {
+    label: 'Cycling',
+    tagline: 'Clarity at speed — frames built for the road and gravel.',
+    cta: 'Shop cycling',
+    href: '/shop?type=sunglasses&sport=cycling',
+    image: '',
+  },
+  {
+    label: 'Running',
+    tagline: 'Stay locked in — lightweight optics for every mile.',
+    cta: 'Shop running',
+    href: '/shop?type=sunglasses&sport=running',
+    image: '',
+  },
 ];
 
 export function Home() {
@@ -93,28 +103,39 @@ export function Home() {
         </div>
       </section>
 
-      {/* Shop by sport */}
+      {/* Shop by sport — two large tiles */}
       <section className="bg-vikko-canvas py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-display text-2xl md:text-3xl font-bold text-vikko-black mb-2">Shop by Sport</h2>
-          <p className="text-vikko-muted mb-8 text-sm md:text-base">Optics tuned for the demands of your discipline.</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+          <h2 className="font-display text-2xl md:text-3xl font-bold text-vikko-black mb-2">
+            Shop by Sport
+          </h2>
+          <p className="text-vikko-muted mb-8 text-sm md:text-base">
+            Optics tuned for the demands of your discipline.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
             {sports.map(sport => (
               <Link
                 key={sport.href}
                 href={sport.href}
-                className="group relative aspect-[4/3] overflow-hidden rounded-lg bg-vikko-white border border-vikko-border cursor-pointer"
+                className="group relative min-h-[280px] md:min-h-[360px] overflow-hidden rounded-lg bg-vikko-black cursor-pointer"
               >
                 {sport.image ? (
                   <div
-                    className="absolute inset-0 bg-cover bg-center opacity-80 transition-transform duration-500 group-hover:scale-105"
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
                     style={{ backgroundImage: `url('${sport.image}')` }}
                   />
                 ) : null}
-                <div className="absolute inset-0 bg-vikko-black/20" />
-                <div className="absolute inset-0 flex items-end p-4">
-                  <span className="font-display text-sm font-semibold text-vikko-white uppercase tracking-wide">
-                    {sport.label}
+                <div className="absolute inset-0 bg-vikko-black/35 group-hover:bg-vikko-black/25 transition-colors" />
+                <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-7 gap-3">
+                  <div>
+                    <h3 className="font-display text-2xl md:text-3xl font-bold text-vikko-white">
+                      {sport.label}
+                    </h3>
+                    <p className="mt-1 text-sm text-white/80 max-w-sm">{sport.tagline}</p>
+                  </div>
+                  <span className="inline-flex w-fit items-center gap-2 rounded-md bg-vikko-black px-4 py-2.5 text-sm font-semibold text-vikko-white">
+                    {sport.cta}
+                    <ArrowRight className="h-4 w-4" aria-hidden />
                   </span>
                 </div>
               </Link>
