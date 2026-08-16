@@ -121,15 +121,16 @@ export function Home() {
               <Link
                 key={sport.href}
                 href={sport.href}
-                className="group relative min-h-[280px] md:min-h-[360px] overflow-hidden rounded-lg bg-vikko-black cursor-pointer"
+                className="group relative aspect-[4/5] sm:aspect-[3/4] overflow-hidden rounded-lg bg-vikko-black cursor-pointer"
               >
                 {sport.image ? (
-                  <div
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                    style={{ backgroundImage: `url('${sport.image}')` }}
+                  <img
+                    src={sport.image}
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                   />
                 ) : null}
-                <div className="absolute inset-0 bg-vikko-black/35 group-hover:bg-vikko-black/25 transition-colors" />
+                <div className="absolute inset-0 bg-gradient-to-t from-vikko-black/70 via-vikko-black/25 to-transparent" />
                 <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-7 gap-3">
                   <div>
                     <h3 className="font-display text-2xl md:text-3xl font-bold text-vikko-white">
