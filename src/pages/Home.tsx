@@ -9,6 +9,8 @@ import mensSunglasses from '../assets/categories/mens-sunglasses.jpg';
 import womensSunglasses from '../assets/categories/womens-sunglasses.jpg';
 import bestsellers from '../assets/categories/bestsellers.jpg';
 import newArrivals from '../assets/categories/new-arrivals.jpg';
+import cyclingSport from '../assets/sports/cycling.jpg';
+import runningSport from '../assets/sports/running.jpg';
 
 const categories = [
   { label: "Men's Sunglasses", href: '/shop?type=sunglasses&gender=men', image: mensSunglasses },
@@ -23,14 +25,14 @@ const sports = [
     tagline: 'Clarity at speed — frames built for the road and gravel.',
     cta: 'Shop cycling',
     href: '/shop?type=sunglasses&sport=cycling',
-    image: '',
+    image: cyclingSport,
   },
   {
     label: 'Running',
     tagline: 'Stay locked in — lightweight optics for every mile.',
     cta: 'Shop running',
     href: '/shop?type=sunglasses&sport=running',
-    image: '',
+    image: runningSport,
   },
 ];
 
