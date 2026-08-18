@@ -17,10 +17,30 @@ import lensMirrored from '../assets/lenses/mirrored.jpg';
 import lensPolarized from '../assets/lenses/polarized.jpg';
 
 const categories = [
-  { label: "Men's Sunglasses", href: '/shop?type=sunglasses&gender=men', image: mensSunglasses },
-  { label: "Women's Sunglasses", href: '/shop?type=sunglasses&gender=women', image: womensSunglasses },
-  { label: 'Best Sellers', href: '/shop?bestsellers=1', image: bestsellers },
-  { label: 'New Arrivals', href: '/shop?new=1', image: newArrivals },
+  {
+    label: "Men's Sunglasses",
+    href: '/shop?type=sunglasses&gender=men',
+    image: mensSunglasses,
+    focus: 'top' as const,
+  },
+  {
+    label: "Women's Sunglasses",
+    href: '/shop?type=sunglasses&gender=women',
+    image: womensSunglasses,
+    focus: 'center' as const,
+  },
+  {
+    label: 'Best Sellers',
+    href: '/shop?bestsellers=1',
+    image: bestsellers,
+    focus: 'top' as const,
+  },
+  {
+    label: 'New Arrivals',
+    href: '/shop?new=1',
+    image: newArrivals,
+    focus: 'top' as const,
+  },
 ];
 
 const sports = [
@@ -110,11 +130,20 @@ export function Home() {
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             {categories.map(cat => (
-              <Link key={cat.href} href={cat.href} className="group relative aspect-[3/4] overflow-hidden rounded-lg bg-vikko-canvas cursor-pointer">
+              <Link
+                key={cat.href}
+                href={cat.href}
+                className="group relative aspect-[3/4] overflow-hidden rounded-lg bg-vikko-canvas cursor-pointer"
+              >
                 {cat.image ? (
-                  <div
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                    style={{ backgroundImage: `url('${cat.image}')` }}
+                  <img
+                    src={cat.image}
+                    alt=""
+                    className={
+                      cat.focus === 'top'
+                        ? 'absolute inset-0 h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105'
+                        : 'absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105'
+                    }
                   />
                 ) : null}
                 <div className="absolute inset-0 bg-vikko-black/25 group-hover:bg-vikko-black/15 transition-colors" />
