@@ -11,7 +11,7 @@ import bestsellers from '../assets/categories/bestsellers.jpg';
 import newArrivals from '../assets/categories/new-arrivals.jpg';
 import cyclingSport from '../assets/sports/cycling.jpg';
 import runningSport from '../assets/sports/running.jpg';
-import rxPrograms from '../assets/banners/rx-programs.jpg';
+import rxPrograms from '../assets/banners/rx-programs.webp';
 import lensPhotochromic from '../assets/lenses/photochromic.jpg';
 import lensMirrored from '../assets/lenses/mirrored.jpg';
 import lensPolarized from '../assets/lenses/polarized.jpg';
@@ -208,7 +208,7 @@ export function Home() {
         <img
           src={rxPrograms}
           alt="Athlete wearing Vikko performance sunglasses"
-          className="absolute inset-0 h-full w-full object-cover object-[center_25%]"
+          className="absolute inset-0 h-full w-full object-cover object-top"
         />
         <div
           className="absolute inset-0 bg-gradient-to-r from-vikko-black/75 via-vikko-black/45 to-vikko-black/20"
